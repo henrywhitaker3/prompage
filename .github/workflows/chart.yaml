@@ -25,7 +25,7 @@ jobs:
       - name: Push chart
         uses: appany/helm-oci-chart-releaser@v0.4.1
         with:
-          name: prompage-chart
+          name: prompage-helm
           repository: henrywhitaker3
           tag: ${{ env.CHART_VERSION }}
           path: chart
