@@ -2,6 +2,7 @@ package http
 
 import (
 	"bytes"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -20,6 +21,19 @@ var (
 	OutageFull    = "Full"
 )
 
+type statusData struct {
+	Config        config.Config
+	Results       []collector.Result
+	Age           time.Duration
+	Outage        string
+	BannerClasses string
+	Version       string
+}
+
+func (s statusData) Sprintf(format string, a ...any) string {
+	return fmt.Sprintf(format, a...)
+}
+
 func NewStatusPageHandler(app *app.App, cache *ResultCache) echo.HandlerFunc {
 	tmpl := template.Must(template.ParseFS(views.Views, "index.html"))
 
@@ -28,14 +42,7 @@ func NewStatusPageHandler(app *app.App, cache *ResultCache) echo.HandlerFunc {
 		age := time.Since(t)
 		op := operational(res)
 
-		data := struct {
-			Config        config.Config
-			Results       []collector.Result
-			Age           time.Duration
-			Outage        string
-			BannerClasses string
-			Version       string
-		}{
+		data := statusData{
 			Config:        *app.Config,
 			Results:       res,
 			Age:           age.Round(time.Second),

@@ -73,7 +73,7 @@ func (q *Querier) Uptime(ctx context.Context, query config.Query) (float32, erro
 			}
 		}
 
-		return float32(passing/total) * 100, nil
+		return (float32(passing) / float32(total)) * 100, nil
 	}
 
 	return 100, ErrTypeNotImplemented
