@@ -15,6 +15,8 @@ type Result struct {
 	Success bool
 	// The boolean result of the main service query
 	Status bool
+	// The percentage uptime for the specified duration
+	Uptime float32
 }
 
 type Collector struct {
@@ -43,12 +45,23 @@ func (c *Collector) Collect(ctx context.Context) []Result {
 			log.Printf("ERROR - Failed to scrape status metric for %s query %s: %s", svc.Name, svc.Query.Name, err)
 			res.Success = false
 			res.Status = false
+			res.Uptime = 0
+			results = append(results, res)
+			continue
+		}
+		uptime, err := c.q.Uptime(ctx, svc.Query)
+		if err != nil {
+			log.Printf("ERROR - Failed to scrape uptime metric for %s query %s: %s", svc.Name, svc.Query.Name, err)
+			res.Success = false
+			res.Status = false
+			res.Uptime = 0
 			results = append(results, res)
 			continue
 		}
 
 		res.Success = true
 		res.Status = status
+		res.Uptime = uptime
 		results = append(results, res)
 	}
 

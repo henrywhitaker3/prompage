@@ -15,6 +15,10 @@ import (
 	"github.com/prometheus/common/model"
 )
 
+var (
+	ErrTypeNotImplemented = errors.New("query result type not implemented yet")
+)
+
 type Querier struct {
 	client v1.API
 }
@@ -40,8 +44,39 @@ func NewQuerier(conf *config.Config) (*Querier, error) {
 	}, nil
 }
 
-func (q *Querier) Range(ctx context.Context, query config.Query) (*Result, error) {
-	return nil, errors.New("range queries not implemented yet")
+func (q *Querier) Uptime(ctx context.Context, query config.Query) (float32, error) {
+	val, _, err := q.client.QueryRange(ctx, query.Query, v1.Range{
+		Start: time.Now().Add(-query.Range),
+		End:   time.Now(),
+		Step:  time.Minute * 5,
+	})
+	if err != nil {
+		return 0, err
+	}
+
+	switch r := val.(type) {
+	case model.Matrix:
+		if r.Len() < 1 {
+			return 0, errors.New("no results for query")
+		}
+
+		passing := 0
+		total := 0
+		for _, val := range r[0].Values {
+			res, err := q.vector(val.Value, query)
+			if err != nil {
+				panic(err)
+			}
+			total++
+			if res {
+				passing++
+			}
+		}
+
+		return float32(passing/total) * 100, nil
+	}
+
+	return 100, ErrTypeNotImplemented
 }
 
 func (q *Querier) Status(ctx context.Context, query config.Query) (bool, error) {
@@ -50,6 +85,18 @@ func (q *Querier) Status(ctx context.Context, query config.Query) (bool, error) 
 		return false, err
 	}
 
+	switch r := val.(type) {
+	case model.Vector:
+		if r.Len() < 1 {
+			return false, errors.New("no results for query")
+		}
+		return q.vector(r[0].Value, query)
+	}
+
+	return false, ErrTypeNotImplemented
+}
+
+func (q *Querier) vector(v model.SampleValue, query config.Query) (bool, error) {
 	env := map[string]any{
 		"result": 0,
 	}
@@ -59,29 +106,17 @@ func (q *Querier) Status(ctx context.Context, query config.Query) (bool, error) 
 		return false, fmt.Errorf("failed to compile expr: %v", err)
 	}
 
-	switch r := val.(type) {
-	case model.Vector:
-		if r.Len() < 1 {
-			return false, errors.New("no results for query")
-		}
-		// if r.Len() != 1 {
-		// 	return nil, errors.New("unexpected result length")
-		// }
-
-		val, err := strconv.ParseFloat(r[0].Value.String(), 64)
-		if err != nil {
-			return false, fmt.Errorf("failed to parse result: %v", err)
-		}
-
-		env["result"] = val
-
-		out, err := expr.Run(exp, env)
-		if err != nil {
-			return false, err
-		}
-
-		return out.(bool), nil
+	val, err := strconv.ParseFloat(v.String(), 64)
+	if err != nil {
+		return false, fmt.Errorf("failed to parse result: %v", err)
 	}
 
-	return false, nil
+	env["result"] = val
+
+	out, err := expr.Run(exp, env)
+	if err != nil {
+		return false, err
+	}
+
+	return out.(bool), nil
 }

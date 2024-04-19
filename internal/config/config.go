@@ -14,6 +14,7 @@ type Query struct {
 	Query      string        `yaml:"query"`
 	Expression string        `yaml:"expression"`
 	Range      time.Duration `yaml:"range"`
+	Step       time.Duration `yaml:"step"`
 }
 
 type Service struct {
@@ -67,6 +68,12 @@ func setDefaults(conf *Config) {
 
 	for i, svc := range conf.Services {
 		svc.Query.Name = "main"
+		if svc.Query.Range == 0 {
+			svc.Query.Range = time.Hour * 24
+		}
+		if svc.Query.Step == 0 {
+			svc.Query.Step = time.Minute * 5
+		}
 		conf.Services[i] = svc
 	}
 
