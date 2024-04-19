@@ -23,11 +23,6 @@ type Querier struct {
 	client v1.API
 }
 
-type Result struct {
-	Result any
-	Time   time.Time
-}
-
 func NewQuerier(conf *config.Config) (*Querier, error) {
 	client, err := prometheus.NewClient(prometheus.Config{
 		Address: conf.Prometheus,

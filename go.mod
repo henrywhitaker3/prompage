@@ -4,6 +4,7 @@ go 1.22.2
 
 require (
 	github.com/expr-lang/expr v1.16.5
+	github.com/hako/durafmt v0.0.0-20210608085754-5c1018a4e16b
 	github.com/labstack/echo-contrib v0.17.1
 	github.com/labstack/echo/v4 v4.12.0
 	github.com/prometheus/client_golang v1.19.0

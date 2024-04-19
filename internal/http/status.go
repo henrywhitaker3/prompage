@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/hako/durafmt"
 	"github.com/henrywhitaker3/prompage/internal/app"
 	"github.com/henrywhitaker3/prompage/internal/collector"
 	"github.com/henrywhitaker3/prompage/internal/config"
@@ -32,6 +33,10 @@ type statusData struct {
 
 func (s statusData) Sprintf(format string, a ...any) string {
 	return fmt.Sprintf(format, a...)
+}
+
+func (s statusData) PrettyDuration(duration time.Duration) string {
+	return durafmt.Parse(duration).String()
 }
 
 func NewStatusPageHandler(app *app.App, cache *ResultCache) echo.HandlerFunc {
