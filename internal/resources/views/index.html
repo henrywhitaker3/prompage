@@ -31,7 +31,12 @@
 
         {{/* Footer */}}
         <div class="text-center text-gray-400">
-            Built with <a class="text-avocado-600" href="https://github.com/henrywhitaker3/prompage">PromPage</a>
+            Built with <a class="text-avocado-600" href="https://github.com/henrywhitaker3/prompage">PromPage</a> |
+            Checked {{ .Age }} ago
         </div>
+
+        <script>
+            setTimeout(() => { location.reload() }, 15000)
+        </script>
     </body>
 </html>

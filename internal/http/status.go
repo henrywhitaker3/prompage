@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/henrywhitaker3/prompage/internal/app"
 	"github.com/henrywhitaker3/prompage/internal/collector"
@@ -17,14 +18,19 @@ func NewStatusPageHandler(app *app.App, cache *ResultCache) echo.HandlerFunc {
 	tmpl := template.Must(template.ParseFS(views.Views, "index.html"))
 
 	return func(c echo.Context) error {
-		var buf bytes.Buffer
+		res, t := cache.Get()
+		age := time.Since(t)
+
 		data := struct {
 			Config  config.Config
 			Results []collector.Result
+			Age     time.Duration
 		}{
 			Config:  *app.Config,
-			Results: cache.Get(),
+			Results: res,
+			Age:     age.Round(time.Second),
 		}
+		var buf bytes.Buffer
 		if err := tmpl.Execute(&buf, data); err != nil {
 			log.Printf("ERROR - could not render template: %s", err)
 			return err

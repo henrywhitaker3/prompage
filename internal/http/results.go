@@ -20,6 +20,7 @@ type ResultCache struct {
 	mu        *sync.Mutex
 	collector *collector.Collector
 	interval  time.Duration
+	time      time.Time
 	results   []collector.Result
 }
 
@@ -32,16 +33,17 @@ func NewResultCache(app *app.App) *ResultCache {
 	}
 }
 
-func (c *ResultCache) Get() []collector.Result {
+func (c *ResultCache) Get() ([]collector.Result, time.Time) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
-	return c.results
+	return c.results, c.time
 }
 
 func (c *ResultCache) Work(ctx context.Context) {
 	c.mu.Lock()
 	c.results = c.collector.Collect(ctx)
+	c.time = time.Now()
 	c.mu.Unlock()
 
 	ticker := time.NewTicker(c.interval)
@@ -56,6 +58,7 @@ func (c *ResultCache) Work(ctx context.Context) {
 		case <-ticker.C:
 			c.mu.Lock()
 			c.results = c.collector.Collect(ctx)
+			c.time = time.Now()
 			c.mu.Unlock()
 		}
 	}
