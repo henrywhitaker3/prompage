@@ -1,0 +1,43 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.SEMVER_GH_TOKEN }}
+
+      - name: Login to ghcr.io
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: |
+            ghcr.io/henrywhitaker3/prompage:latest
+            ghcr.io/henrywhitaker3/prompage:${{ github.ref_name }}
+
+      # - uses: actions/checkout@v4
+      #   with:
+      #     ref: main
+      # - name: Update helm chart with latest version
+      #   run: |
+      #     sed -E -i "s/version: v[0-9]+\.[0-9]+\.[0-9]+/version: ${{ github.ref_name }}/g" chart/values.yaml
+      # - uses: stefanzweifel/git-auto-commit-action@v5
+      #   with:
+      #     commit_message: "chore(chart): update version to ${{ github.ref_name }}"
