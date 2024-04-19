@@ -2,5 +2,5 @@ apiVersion: v2
 name: prompage-helm
 description: A Helm chart for PromPage
 type: application
-version: 0.1.1
-appVersion: "v1.0.6"
+version: 0.1.2
+appVersion: "v1.0.7"

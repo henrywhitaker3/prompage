@@ -31,13 +31,3 @@ jobs:
           tags: |
             ghcr.io/henrywhitaker3/prompage:latest
             ghcr.io/henrywhitaker3/prompage:${{ github.ref_name }}
-
-      # - uses: actions/checkout@v4
-      #   with:
-      #     ref: main
-      # - name: Update helm chart with latest version
-      #   run: |
-      #     sed -E -i "s/version: v[0-9]+\.[0-9]+\.[0-9]+/version: ${{ github.ref_name }}/g" chart/values.yaml
-      # - uses: stefanzweifel/git-auto-commit-action@v5
-      #   with:
-      #     commit_message: "chore(chart): update version to ${{ github.ref_name }}"
