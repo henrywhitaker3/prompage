@@ -42,6 +42,15 @@ tasks:
           tag: '{{ .tag }}'
       - docker run --net=host --rm -v $(pwd)/prompage.yaml:/prompage.yaml henrywhitaker3/prompage:{{ .tag }} {{ .CLI_ARGS }}
 
+  helm:install:
+    desc: Install the helm chart
+    vars:
+      values: '{{ .values | default "chart/values.yaml" }}'
+      ns: '{{ .ns | default "prompage" }}'
+      name: '{{ .name | default "prompage" }}'
+    cmds:
+      - helm upgrade --install -f chart/{{ .values }} -n {{ .ns }} {{ .name }} chart/
+
   default:
     silent: true
     cmds:

@@ -11,3 +11,4 @@ local/
 prompage.yaml
 internal/resources/static/tailwind.css
 node_modules/
+chart/values.local.yaml
