@@ -20,6 +20,7 @@ tasks:
   serve:
     desc: Run the http server
     cmds:
+      - go generate
       - go run main.go serve
 
   docker:build:

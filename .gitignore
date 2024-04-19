@@ -9,3 +9,5 @@ tmp/
 local/
 
 prompage.yaml
+internal/resources/static/tailwind.css
+node_modules/

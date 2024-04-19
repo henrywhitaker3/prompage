@@ -22,11 +22,17 @@ type Service struct {
 	// Extras []Query `yaml:"extras"`
 }
 
+type UI struct {
+	Title string `yaml:"title"`
+}
+
 type Config struct {
 	Port       int           `yaml:"port"`
 	Services   []Service     `yaml:"services"`
 	Prometheus string        `yaml:"prometheus"`
 	Refresh    time.Duration `yaml:"refresh"`
+
+	UI UI `yaml:"ui"`
 }
 
 func Load(path string) (*Config, error) {
@@ -65,6 +71,10 @@ func setDefaults(conf *Config) {
 
 	if conf.Refresh == 0 {
 		conf.Refresh = time.Second * 30
+	}
+
+	if conf.UI.Title == "" {
+		conf.UI.Title = "PromPage"
 	}
 }
 

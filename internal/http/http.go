@@ -3,8 +3,10 @@ package http
 import (
 	"context"
 	"fmt"
+	"net/http"
 
 	"github.com/henrywhitaker3/prompage/internal/app"
+	"github.com/henrywhitaker3/prompage/internal/resources/static"
 	"github.com/labstack/echo-contrib/echoprometheus"
 	"github.com/labstack/echo/v4"
 )
@@ -16,8 +18,12 @@ type Http struct {
 
 func NewHttp(app *app.App) *Http {
 	e := echo.New()
+	e.HideBanner = true
 
 	e.Use(echoprometheus.NewMiddleware("prompage"))
+
+	e.GET("/", NewStatusPageHandler(app))
+	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", http.FileServerFS(static.FS))))
 
 	return &Http{
 		e:   e,

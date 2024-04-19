@@ -15,6 +15,8 @@ var (
 	configPath string
 )
 
+//go:generate npm run build
+
 func main() {
 	pflag.StringVarP(&configPath, "config", "c", "prompage.yaml", "The location of the config file")
 
