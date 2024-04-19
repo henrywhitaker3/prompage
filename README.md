@@ -31,7 +31,7 @@ services:
 ### Helm
 
 ```
-helm install my-generic oci://ghcr.io/henrywhitaker3/generic
+helm install prompage oci://ghcr.io/henrywhitaker3/prompage-helm
 ```
 
 See the [values file](https://github.com/henrywhitaker3/prompage/blob/main/chart/values.yaml) for configuration options
