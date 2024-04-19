@@ -32,6 +32,13 @@ func NewResultCache(app *app.App) *ResultCache {
 	}
 }
 
+func (c *ResultCache) Get() []collector.Result {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	return c.results
+}
+
 func (c *ResultCache) Work(ctx context.Context) {
 	c.mu.Lock()
 	c.results = c.collector.Collect(ctx)

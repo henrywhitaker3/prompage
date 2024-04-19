@@ -61,6 +61,9 @@ func (q *Querier) Status(ctx context.Context, query config.Query) (bool, error) 
 
 	switch r := val.(type) {
 	case model.Vector:
+		if r.Len() < 1 {
+			return false, errors.New("no results for query")
+		}
 		// if r.Len() != 1 {
 		// 	return nil, errors.New("unexpected result length")
 		// }

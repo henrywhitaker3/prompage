@@ -12,23 +12,25 @@ import (
 )
 
 type Http struct {
-	e   *echo.Echo
-	app *app.App
+	e     *echo.Echo
+	app   *app.App
+	cache *ResultCache
 }
 
-func NewHttp(app *app.App) *Http {
+func NewHttp(app *app.App, cache *ResultCache) *Http {
 	e := echo.New()
 	e.HideBanner = true
 
 	e.Use(echoprometheus.NewMiddleware("prompage"))
 
-	e.GET("/", NewStatusPageHandler(app))
+	e.GET("/", NewStatusPageHandler(app, cache))
 	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", http.FileServerFS(static.FS))))
-	e.GET("/metrics", echoprometheus.NewHandler())
+	// e.GET("/metrics", echoprometheus.NewHandler())
 
 	return &Http{
-		e:   e,
-		app: app,
+		e:     e,
+		app:   app,
+		cache: cache,
 	}
 }
 

@@ -23,7 +23,8 @@ type Service struct {
 }
 
 type UI struct {
-	Title string `yaml:"title"`
+	PageTitle  string `yaml:"title"`
+	HeaderText string `yaml:"header"`
 }
 
 type Config struct {
@@ -73,8 +74,11 @@ func setDefaults(conf *Config) {
 		conf.Refresh = time.Second * 30
 	}
 
-	if conf.UI.Title == "" {
-		conf.UI.Title = "PromPage"
+	if conf.UI.PageTitle == "" {
+		conf.UI.PageTitle = "PromPage"
+	}
+	if conf.UI.HeaderText == "" {
+		conf.UI.HeaderText = "Status Page"
 	}
 }
 

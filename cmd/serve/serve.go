@@ -30,7 +30,7 @@ func NewServeCommand(app *app.App) *cobra.Command {
 			}()
 
 			cache := http.NewResultCache(app)
-			http := http.NewHttp(app)
+			http := http.NewHttp(app, cache)
 
 			go cache.Work(ctx)
 			go func() {
