@@ -1,21 +1,24 @@
 package config
 
 import (
+	"errors"
 	"fmt"
 	"os"
+	"time"
 
 	"gopkg.in/yaml.v3"
 )
 
 type Query struct {
-	Name  string `yaml:"name"`
-	Query string `yaml:"query"`
+	Name       string        `yaml:"name"`
+	Query      string        `yaml:"query"`
+	Expression string        `yaml:"expression"`
+	Range      time.Duration `yaml:"range"`
 }
 
 type Service struct {
-	Name        string  `yaml:"name"`
-	Queries     []Query `yaml:"queries"`
-	ShowMetrics bool    `yaml:"show_metrics"`
+	Name    string  `yaml:"name"`
+	Queries []Query `yaml:"queries"`
 }
 
 type Config struct {
@@ -41,6 +44,10 @@ func Load(path string) (*Config, error) {
 
 	setDefaults(conf)
 
+	if err := conf.Validate(); err != nil {
+		return nil, err
+	}
+
 	return conf, nil
 }
 
@@ -48,4 +55,12 @@ func setDefaults(conf *Config) {
 	if conf.Port == 0 {
 		conf.Port = 3000
 	}
+}
+
+func (c *Config) Validate() error {
+	if c.Prometheus == "" {
+		return errors.New("prometheus cannot be empty")
+	}
+
+	return nil
 }

@@ -1,0 +1,12 @@
+version: "2"
+
+tasks:
+  portf:
+    desc: Port-forward prometheus from the current kube ctx
+    vars:
+      ns: '{{ .ns | default "monitoring" }}'
+      svc: '{{ .svc | default "kube-prometheus-stack-prometheus"}}'
+      local: '{{ .local | default "9090" }}'
+      remote: '{{ .remote | default "9090" }}'
+    cmds:
+      - kubectl -n {{ .ns }} port-forward svc/{{ .svc }} {{ .local }}:{{ .remote }}
