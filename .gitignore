@@ -1,0 +1,11 @@
+build/bin
+dist/
+
+go.work
+.vscode/settings.json
+.env
+chart/charts/
+tmp/
+local/
+
+prompage.yaml
