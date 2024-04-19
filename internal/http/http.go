@@ -24,6 +24,7 @@ func NewHttp(app *app.App) *Http {
 
 	e.GET("/", NewStatusPageHandler(app))
 	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", http.FileServerFS(static.FS))))
+	e.GET("/metrics", echoprometheus.NewHandler())
 
 	return &Http{
 		e:   e,
