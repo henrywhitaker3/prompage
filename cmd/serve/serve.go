@@ -9,12 +9,12 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/henrywhitaker3/prompage/internal/config"
+	"github.com/henrywhitaker3/prompage/internal/app"
 	"github.com/henrywhitaker3/prompage/internal/http"
 	"github.com/spf13/cobra"
 )
 
-func NewServeCommand(conf *config.Config) *cobra.Command {
+func NewServeCommand(app *app.App) *cobra.Command {
 	return &cobra.Command{
 		Use:   "serve",
 		Short: "Run the status page http server",
@@ -29,7 +29,7 @@ func NewServeCommand(conf *config.Config) *cobra.Command {
 				cancel()
 			}()
 
-			http := http.NewHttp(conf)
+			http := http.NewHttp(app)
 
 			go func() {
 				if err := http.Serve(); err != nil {

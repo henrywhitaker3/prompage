@@ -1,4 +1,4 @@
-version: "2"
+version: "3"
 
 tasks:
   portf:
@@ -10,3 +10,9 @@ tasks:
       remote: '{{ .remote | default "9090" }}'
     cmds:
       - kubectl -n {{ .ns }} port-forward svc/{{ .svc }} {{ .local }}:{{ .remote }}
+
+  query:
+    desc: Run the query sub-command
+    silent: true
+    cmds:
+      - go run main.go query

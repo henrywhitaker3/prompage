@@ -17,8 +17,9 @@ type Query struct {
 }
 
 type Service struct {
-	Name    string  `yaml:"name"`
-	Queries []Query `yaml:"queries"`
+	Name  string `yaml:"name"`
+	Query Query  `yaml:"query"`
+	// Extras []Query `yaml:"extras"`
 }
 
 type Config struct {
@@ -54,6 +55,11 @@ func Load(path string) (*Config, error) {
 func setDefaults(conf *Config) {
 	if conf.Port == 0 {
 		conf.Port = 3000
+	}
+
+	for i, svc := range conf.Services {
+		svc.Query.Name = "main"
+		conf.Services[i] = svc
 	}
 }
 

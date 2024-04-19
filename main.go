@@ -5,7 +5,9 @@ import (
 	"os"
 
 	"github.com/henrywhitaker3/prompage/cmd"
+	"github.com/henrywhitaker3/prompage/internal/app"
 	"github.com/henrywhitaker3/prompage/internal/config"
+	"github.com/henrywhitaker3/prompage/internal/querier"
 	"github.com/spf13/pflag"
 )
 
@@ -25,7 +27,15 @@ func main() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	cmd.LoadSubCommands(root, conf)
+	q, err := querier.NewQuerier(conf)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	app := app.NewApp(conf, q)
+
+	cmd.LoadSubCommands(root, app)
 
 	if err := root.Execute(); err != nil {
 		os.Exit(2)
