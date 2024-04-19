@@ -32,38 +32,49 @@ func NewCollector(q *querier.Querier, svcs []config.Service) *Collector {
 }
 
 func (c *Collector) Collect(ctx context.Context) []Result {
-	results := []Result{}
-
-	for _, svc := range c.svcs {
-		res := Result{
-			Service: svc,
-		}
-		log.Printf("collecting metrics for %s\n", svc.Name)
-
-		status, err := c.q.Status(ctx, svc.Query)
-		if err != nil {
-			log.Printf("ERROR - Failed to scrape status metric for %s query %s: %s", svc.Name, svc.Query.Name, err)
-			res.Success = false
-			res.Status = false
-			res.Uptime = 0
-			results = append(results, res)
-			continue
-		}
-		uptime, err := c.q.Uptime(ctx, svc.Query)
-		if err != nil {
-			log.Printf("ERROR - Failed to scrape uptime metric for %s query %s: %s", svc.Name, svc.Query.Name, err)
-			res.Success = false
-			res.Status = false
-			res.Uptime = 0
-			results = append(results, res)
-			continue
-		}
-
-		res.Success = true
-		res.Status = status
-		res.Uptime = uptime
-		results = append(results, res)
+	order := map[string]int{}
+	results := make(chan Result, len(c.svcs))
+	defer close(results)
+	for i, svc := range c.svcs {
+		order[svc.Name] = i
+		go c.collectService(ctx, svc, results)
 	}
 
-	return results
+	out := make([]Result, len(c.svcs))
+	processed := 0
+	for res := range results {
+		out[order[res.Service.Name]] = res
+		processed++
+		if processed == len(c.svcs) {
+			break
+		}
+	}
+
+	return out
+}
+
+func (c *Collector) collectService(ctx context.Context, svc config.Service, ch chan<- Result) {
+	res := Result{
+		Service: svc,
+		Status:  false,
+		Success: true,
+		Uptime:  0,
+	}
+	log.Printf("collecting metrics for %s\n", svc.Name)
+
+	status, err := c.q.Status(ctx, svc.Query)
+	if err != nil {
+		log.Printf("ERROR - Failed to scrape status metric for %s query %s: %s", svc.Name, svc.Query.Name, err)
+		res.Success = false
+	}
+	uptime, err := c.q.Uptime(ctx, svc.Query)
+	if err != nil {
+		log.Printf("ERROR - Failed to scrape uptime metric for %s query %s: %s", svc.Name, svc.Query.Name, err)
+		res.Success = false
+	}
+
+	res.Success = true
+	res.Status = status
+	res.Uptime = uptime
+	ch <- res
 }
