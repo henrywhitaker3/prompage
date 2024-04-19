@@ -21,3 +21,27 @@ tasks:
     desc: Run the http server
     cmds:
       - go run main.go serve
+
+  docker:build:
+    desc: Build the docker image
+    requires:
+      vars:
+        - tag
+    cmds:
+      - docker build . -t henrywhitaker3/prompage:{{ .tag }}
+
+  docker:run:
+    desc: Build and run the docker image
+    vars:
+      tag:
+        sh: head -n 10 /dev/random | md5sum | cut -c1-6
+    cmds:
+      - task: docker:build
+        vars:
+          tag: '{{ .tag }}'
+      - docker run --net=host --rm -v $(pwd)/prompage.yaml:/prompage.yaml henrywhitaker3/prompage:{{ .tag }} {{ .CLI_ARGS }}
+
+  default:
+    silent: true
+    cmds:
+      - task -l
