@@ -31,3 +31,5 @@ jobs:
           tags: |
             ghcr.io/henrywhitaker3/prompage:latest
             ghcr.io/henrywhitaker3/prompage:${{ github.ref_name }}
+          build-args: |
+            VERSION=${{ github.ref_name }}

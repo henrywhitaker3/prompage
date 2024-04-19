@@ -29,7 +29,7 @@ tasks:
       vars:
         - tag
     cmds:
-      - docker build . -t henrywhitaker3/prompage:{{ .tag }}
+      - docker build . -t henrywhitaker3/prompage:{{ .tag }} --build-arg VERSION="{{ .tag }}"
 
   docker:run:
     desc: Build and run the docker image

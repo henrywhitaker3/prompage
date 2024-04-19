@@ -13,6 +13,7 @@ import (
 
 var (
 	configPath string
+	version    string
 )
 
 //go:generate npm run build
@@ -36,6 +37,7 @@ func main() {
 	}
 
 	app := app.NewApp(conf, q)
+	app.Version = version
 
 	cmd.LoadSubCommands(root, app)
 

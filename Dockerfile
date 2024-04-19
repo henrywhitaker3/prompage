@@ -12,12 +12,14 @@ RUN npm run build
 
 FROM golang:1.22 AS gob
 
+ARG VERSION
+
 WORKDIR /build
 
 COPY --from=tob /build .
 
 RUN go mod download
-RUN CGO_ENABLED=0 go build -a -o prompage main.go
+RUN CGO_ENABLED=0 go build -ldflags="-X main.version=${VERSION}" -a -o prompage main.go
 
 FROM alpine:3.19.1
 

@@ -7,6 +7,7 @@ import (
 )
 
 type App struct {
+	Version   string
 	Config    *config.Config
 	Querier   *querier.Querier
 	Collector *collector.Collector

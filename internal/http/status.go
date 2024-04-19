@@ -34,12 +34,14 @@ func NewStatusPageHandler(app *app.App, cache *ResultCache) echo.HandlerFunc {
 			Age           time.Duration
 			Outage        string
 			BannerClasses string
+			Version       string
 		}{
 			Config:        *app.Config,
 			Results:       res,
 			Age:           age.Round(time.Second),
 			Outage:        op,
 			BannerClasses: bannerClasses(op),
+			Version:       app.Version,
 		}
 		var buf bytes.Buffer
 		if err := tmpl.Execute(&buf, data); err != nil {
