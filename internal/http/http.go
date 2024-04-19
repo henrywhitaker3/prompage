@@ -25,6 +25,10 @@ func NewHttp(app *app.App, cache *ResultCache) *Http {
 
 	e.GET("/", NewStatusPageHandler(app, cache))
 	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", http.FileServerFS(static.FS))))
+
+	e.GET("/api/services", NewGetAllHandler(app, cache))
+	e.GET("/api/services/:name", NewGetHandler(app, cache))
+
 	// e.GET("/metrics", echoprometheus.NewHandler())
 
 	return &Http{

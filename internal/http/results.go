@@ -2,6 +2,7 @@ package http
 
 import (
 	"context"
+	"errors"
 	"log"
 	"sync"
 	"time"
@@ -9,6 +10,10 @@ import (
 	"github.com/henrywhitaker3/prompage/internal/app"
 	"github.com/henrywhitaker3/prompage/internal/collector"
 	"github.com/henrywhitaker3/prompage/internal/config"
+)
+
+var (
+	ErrNotFound = errors.New("service not found")
 )
 
 type Result struct {
@@ -38,6 +43,16 @@ func (c *ResultCache) Get() ([]collector.Result, time.Time) {
 	defer c.mu.Unlock()
 
 	return c.results, c.time
+}
+
+func (c *ResultCache) GetService(name string) (collector.Result, error) {
+	results, _ := c.Get()
+	for _, r := range results {
+		if r.Service.Name == name {
+			return r, nil
+		}
+	}
+	return collector.Result{}, ErrNotFound
 }
 
 func (c *ResultCache) Work(ctx context.Context) {
