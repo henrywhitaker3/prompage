@@ -48,7 +48,7 @@ func (q *Querier) Uptime(ctx context.Context, query config.Query) (float32, erro
 	val, _, err := q.client.QueryRange(ctx, query.Query, v1.Range{
 		Start: time.Now().Add(-query.Range),
 		End:   time.Now(),
-		Step:  time.Minute * 5,
+		Step:  query.Step,
 	})
 	if err != nil {
 		return 0, err

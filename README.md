@@ -20,8 +20,8 @@ services:
       query: sum(pg_up)
       # The expressions uses https://expr-lang.org and must evaluate to true/false
       expression: float(pg_up) == 1
-      # The time range to calculate the uptime percentage with (default: 7d)
-      range: 7d
+      # The time range to calculate the uptime percentage with (default: 24h)
+      range: 24h
       # The resoltuion of the range query (default: 5m)
       step: 5m
 ```
