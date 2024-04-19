@@ -14,21 +14,32 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+var (
+	OutageNone    = "None"
+	OutagePartial = "Partial"
+	OutageFull    = "Full"
+)
+
 func NewStatusPageHandler(app *app.App, cache *ResultCache) echo.HandlerFunc {
 	tmpl := template.Must(template.ParseFS(views.Views, "index.html"))
 
 	return func(c echo.Context) error {
 		res, t := cache.Get()
 		age := time.Since(t)
+		op := operational(res)
 
 		data := struct {
-			Config  config.Config
-			Results []collector.Result
-			Age     time.Duration
+			Config        config.Config
+			Results       []collector.Result
+			Age           time.Duration
+			Outage        string
+			BannerClasses string
 		}{
-			Config:  *app.Config,
-			Results: res,
-			Age:     age.Round(time.Second),
+			Config:        *app.Config,
+			Results:       res,
+			Age:           age.Round(time.Second),
+			Outage:        op,
+			BannerClasses: bannerClasses(op),
 		}
 		var buf bytes.Buffer
 		if err := tmpl.Execute(&buf, data); err != nil {
@@ -37,5 +48,36 @@ func NewStatusPageHandler(app *app.App, cache *ResultCache) echo.HandlerFunc {
 		}
 
 		return c.HTML(http.StatusOK, buf.String())
+	}
+}
+
+func operational(res []collector.Result) string {
+	passing := 0
+	for _, r := range res {
+		if r.Status {
+			passing++
+		}
+	}
+
+	switch passing {
+	case 0:
+		return OutageFull
+	case len(res):
+		return OutageNone
+	default:
+		return OutagePartial
+	}
+}
+
+func bannerClasses(outage string) string {
+	switch outage {
+	case OutageNone:
+		return "bg-lime-600 text-white"
+	case OutageFull:
+		return "bg-red-500 text-white"
+	case OutagePartial:
+		fallthrough
+	default:
+		return "bg-orange-400"
 	}
 }

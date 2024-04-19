@@ -24,8 +24,6 @@ configuration:
   ui:
     # The title of the page
     title: Status Page
-    # The header text to display
-    header: Status Page
 
 imagePullSecrets: []
 nameOverride: ""
