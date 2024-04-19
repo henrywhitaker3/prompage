@@ -20,6 +20,7 @@ type Query struct {
 type Service struct {
 	Name  string `yaml:"name"`
 	Query Query  `yaml:"query"`
+	Group string `yaml:"group"`
 	// Extras []Query `yaml:"extras"`
 }
 
@@ -72,6 +73,9 @@ func setDefaults(conf *Config) {
 		}
 		if svc.Query.Step == 0 {
 			svc.Query.Step = time.Minute * 5
+		}
+		if svc.Group == "" {
+			svc.Group = "default"
 		}
 		conf.Services[i] = svc
 	}

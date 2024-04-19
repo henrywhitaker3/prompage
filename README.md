@@ -15,14 +15,16 @@ The status page is configured using a yaml config file:
 prometheus: http://prometheus:9090
 services:
   - name: Postgres
+    # Optional. Group services together
+    group: Infra
     query:
       # If multiple values are returned, only the first one is used
       query: sum(pg_up)
       # The expressions uses https://expr-lang.org and must evaluate to true/false
       expression: float(pg_up) == 1
-      # The time range to calculate the uptime percentage with (default: 24h)
+      # Optional. The time range to calculate the uptime percentage with (default: 24h)
       range: 24h
-      # The resoltuion of the range query (default: 5m)
+      # Optional. The resoltuion of the range query (default: 5m)
       step: 5m
 ```
 

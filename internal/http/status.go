@@ -22,9 +22,14 @@ var (
 	OutageFull    = "Full"
 )
 
+type group struct {
+	Name    string
+	Results []collector.Result
+}
+
 type statusData struct {
 	Config        config.Config
-	Results       []collector.Result
+	Results       []group
 	Age           time.Duration
 	Outage        string
 	BannerClasses string
@@ -49,7 +54,7 @@ func NewStatusPageHandler(app *app.App, cache *ResultCache) echo.HandlerFunc {
 
 		data := statusData{
 			Config:        *app.Config,
-			Results:       res,
+			Results:       groupResults(res),
 			Age:           age.Round(time.Second),
 			Outage:        op,
 			BannerClasses: bannerClasses(op),
@@ -94,4 +99,28 @@ func bannerClasses(outage string) string {
 	default:
 		return "bg-orange-400"
 	}
+}
+
+func groupResults(res []collector.Result) []group {
+	grouped := []group{}
+	// Add the default group at index 0
+	grouped = append(grouped, group{Name: "default"})
+
+	for _, r := range res {
+		added := false
+		for i, g := range grouped {
+			if g.Name == r.Service.Group {
+				g.Results = append(g.Results, r)
+				grouped[i] = g
+				added = true
+			}
+		}
+		if !added {
+			grouped = append(grouped, group{
+				Name:    r.Service.Group,
+				Results: []collector.Result{r},
+			})
+		}
+	}
+	return grouped
 }
