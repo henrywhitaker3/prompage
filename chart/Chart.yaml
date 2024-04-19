@@ -3,4 +3,4 @@ name: prompage-helm
 description: A Helm chart for PromPage
 type: application
 version: 0.1.4
-appVersion: "v1.1.2"
+appVersion: "v1.1.3"
