@@ -29,10 +29,12 @@ func NewServeCommand(app *app.App) *cobra.Command {
 				cancel()
 			}()
 
+			cache := http.NewResultCache(app)
 			http := http.NewHttp(app)
 
+			go cache.Work(ctx)
 			go func() {
-				if err := http.Serve(); err != nil {
+				if err := http.Start(); err != nil {
 					if !errors.Is(err, stdhttp.ErrServerClosed) {
 						fmt.Println(fmt.Errorf("http server failed: %v", err))
 						cancel()

@@ -25,7 +25,7 @@ func NewHttp(app *app.App) *Http {
 	}
 }
 
-func (h *Http) Serve() error {
+func (h *Http) Start() error {
 	return h.e.Start(fmt.Sprintf(":%d", h.app.Config.Port))
 }
 

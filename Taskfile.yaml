@@ -16,3 +16,8 @@ tasks:
     silent: true
     cmds:
       - go run main.go query
+
+  serve:
+    desc: Run the http server
+    cmds:
+      - go run main.go serve
