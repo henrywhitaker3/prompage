@@ -2,7 +2,7 @@
 
 ![status page screenshot](.github/dashboard.png)
 
-A stateless status page using data from prometheus
+A stateless status page using data from prometheus. [Demo page](https://status.henrywhitaker.com/).
 
 ## Usage
 
