@@ -37,9 +37,11 @@ jobs:
           rc=$?
           set -e
           if [ $rc -eq 0 ]; then
-            echo "CHART_EXISTS=yes" >> $GITHUB_OUTPUT
+            echo Chart version already exists
+            echo "CHART_EXISTS='yes'" >> $GITHUB_OUTPUT
           else
-            echo "CHART_EXISTS=no" >> $GITHUB_OUTPUT
+            echo Chart version does not exist
+            echo "CHART_EXISTS='no'" >> $GITHUB_OUTPUT
           fi
 
       - name: Push chart
