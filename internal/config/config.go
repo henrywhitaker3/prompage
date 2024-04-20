@@ -28,8 +28,14 @@ type UI struct {
 	PageTitle string `yaml:"title"`
 }
 
+type Metrics struct {
+	Enabled bool `yaml:"enabled"`
+	Port    int  `yaml:"port"`
+}
+
 type Config struct {
 	Port       int           `yaml:"port"`
+	Metrics    Metrics       `yaml:"metrics"`
 	Services   []Service     `yaml:"services"`
 	Prometheus string        `yaml:"prometheus"`
 	Refresh    time.Duration `yaml:"refresh"`
@@ -64,6 +70,9 @@ func Load(path string) (*Config, error) {
 func setDefaults(conf *Config) {
 	if conf.Port == 0 {
 		conf.Port = 3000
+	}
+	if conf.Metrics.Port == 0 {
+		conf.Metrics.Port = 9743
 	}
 
 	for i, svc := range conf.Services {

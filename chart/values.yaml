@@ -13,6 +13,11 @@ configuration:
   # How often the pod queries prometheus for metrics
   refresh: 30s
 
+  # Whether to expose prompage metrics
+  metrics:
+    enabled: false
+    port: 9743
+
   # The services to gather statuses for e.g.
   # - name: Database
   #   query:

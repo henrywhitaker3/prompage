@@ -11,6 +11,7 @@ import (
 
 	"github.com/henrywhitaker3/prompage/internal/app"
 	"github.com/henrywhitaker3/prompage/internal/http"
+	"github.com/henrywhitaker3/prompage/internal/metrics"
 	"github.com/spf13/cobra"
 )
 
@@ -31,6 +32,8 @@ func NewServeCommand(app *app.App) *cobra.Command {
 
 			cache := http.NewResultCache(app)
 			http := http.NewHttp(app, cache)
+			metrics := metrics.NewServer(app.Config.Metrics.Port)
+			metrics.Init()
 
 			go cache.Work(ctx)
 			go func() {
@@ -41,8 +44,19 @@ func NewServeCommand(app *app.App) *cobra.Command {
 					}
 				}
 			}()
+			if app.Config.Metrics.Enabled {
+				go func() {
+					if err := metrics.Start(); err != nil {
+						if !errors.Is(err, stdhttp.ErrServerClosed) {
+							fmt.Println(fmt.Errorf("metrics server failed: %v", err))
+							cancel()
+						}
+					}
+				}()
+			}
 
 			<-ctx.Done()
+			metrics.Stop(context.Background())
 			return http.Stop(context.Background())
 		},
 	}

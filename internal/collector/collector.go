@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/henrywhitaker3/prompage/internal/config"
+	"github.com/henrywhitaker3/prompage/internal/metrics"
 	"github.com/henrywhitaker3/prompage/internal/querier"
 )
 
@@ -44,6 +45,14 @@ func (c *Collector) Collect(ctx context.Context) []Result {
 	processed := 0
 	for res := range results {
 		out[order[res.Service.Name]] = res
+
+		status := float64(0)
+		if res.Status {
+			status = 1
+		}
+		metrics.ServiceStatus.WithLabelValues(res.Service.Name, res.Service.Group).Set(status)
+		metrics.ServiceUptime.WithLabelValues(res.Service.Name, res.Service.Group).Set(float64(res.Uptime))
+
 		processed++
 		if processed == len(c.svcs) {
 			break

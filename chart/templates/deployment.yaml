@@ -50,6 +50,9 @@ spec:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
+            - name: metrics
+              containerPort: {{ .Values.configuration.metrics.port }}
+              protocol: TCP
           livenessProbe:
             httpGet:
               path: /
