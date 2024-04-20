@@ -31,10 +31,19 @@ jobs:
 
       - name: Check if chart exists
         id: chartExists
-        run: docker manifest inspect ghcr.io/henrywhitaker3/prompage-helm:${{ env.CHART_VERSION }}
+        run: |
+          set +e
+          docker manifest inspect ghcr.io/henrywhitaker3/prompage-helm:${{ env.CHART_VERSION }}
+          rc=$?
+          set -e
+          if [ $rc -eq 0 ]; then
+            echo "::set-output name=CHART_EXISTS::'yes'"
+          else
+            echo "::set-output name=CHART_EXISTS::'no'"
+          fi
 
       - name: Push chart
-        if: failure() && steps.chartExists.outcome == 'failure'
+        if: steps.chartExists.outputs.CHART_EXISTS == 'no'
         uses: appany/helm-oci-chart-releaser@v0.4.1
         with:
           name: prompage-helm
