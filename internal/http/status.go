@@ -34,6 +34,7 @@ type statusData struct {
 	Outage        string
 	BannerClasses string
 	Version       string
+	Refresh       int
 }
 
 func (s statusData) Sprintf(format string, a ...any) string {
@@ -59,6 +60,7 @@ func NewStatusPageHandler(app *app.App, cache *ResultCache) echo.HandlerFunc {
 			Outage:        op,
 			BannerClasses: bannerClasses(op),
 			Version:       app.Version,
+			Refresh:       int(app.Config.UI.RefreshInterval / time.Millisecond),
 		}
 		var buf bytes.Buffer
 		if err := tmpl.Execute(&buf, data); err != nil {

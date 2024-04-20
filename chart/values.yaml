@@ -29,6 +29,8 @@ configuration:
   ui:
     # The title of the page
     title: Status Page
+    # How often the page reloads
+    refresh: 30s
 
 imagePullSecrets: []
 nameOverride: ""

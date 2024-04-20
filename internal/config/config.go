@@ -25,7 +25,8 @@ type Service struct {
 }
 
 type UI struct {
-	PageTitle string `yaml:"title"`
+	PageTitle       string        `yaml:"title"`
+	RefreshInterval time.Duration `yaml:"refresh"`
 }
 
 type Metrics struct {
@@ -95,6 +96,9 @@ func setDefaults(conf *Config) {
 
 	if conf.UI.PageTitle == "" {
 		conf.UI.PageTitle = "PromPage"
+	}
+	if conf.UI.RefreshInterval == 0 {
+		conf.UI.RefreshInterval = time.Second * 30
 	}
 }
 
