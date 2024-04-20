@@ -19,7 +19,7 @@ jobs:
 
       - name: Get chart version
         run: |
-          CHART_VERSION=$(echo ${{ github.ref_name }} | grep -Eo "v.*")
+          CHART_VERSION=$(cat chart/Chart.yaml | grep -Eo "[0-9]+\.[0-9]+\.[0-9]+$")
           echo "CHART_VERSION=${CHART_VERSION}" >> $GITHUB_ENV
 
       - name: Login to ghcr.io
