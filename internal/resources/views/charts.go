@@ -90,16 +90,26 @@ func chunk(items []collector.SeriesItem, perBucket, buckets int) [][]collector.S
 	out := make([][]collector.SeriesItem, buckets)
 
 	feed := make(chan collector.SeriesItem, 1)
+	run := true
 	go func() {
 		for _, item := range items {
+			if !run {
+				break
+			}
 			feed <- item
 		}
 	}()
+
 	for i := 0; i < buckets; i++ {
 		for range perBucket {
 			out[i] = append(out[i], <-feed)
 		}
 	}
+
+	// Pull the last item out so it doesn't leak goroutines every graph load
+	run = false
+	<-feed
+
 	return out
 }
 

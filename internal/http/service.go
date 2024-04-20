@@ -32,7 +32,7 @@ func NewGetServiceHandler(app *app.App, cache *ResultCache) echo.HandlerFunc {
 			if errors.Is(err, ErrNotFound) {
 				return c.NoContent(http.StatusNotFound)
 			}
-			log.Printf("ERROR - could not fins service: %s\n", name)
+			log.Printf("ERROR - could not find service: %s\n", name)
 			return err
 		}
 		graph, err := views.GenerateLineChart(svc.Series, app.Config.UI.Graphs.Points)
