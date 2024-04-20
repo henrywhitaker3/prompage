@@ -2,6 +2,8 @@ package views
 
 import (
 	"bytes"
+	"fmt"
+	"sync"
 	"time"
 
 	"github.com/go-echarts/go-echarts/v2/charts"
@@ -10,8 +12,57 @@ import (
 	"github.com/henrywhitaker3/prompage/internal/collector"
 )
 
-// Generates a lin chart ing html for a given series
+type chartItem struct {
+	data  string
+	until time.Time
+}
+
+type chartCache struct {
+	mu     *sync.Mutex
+	charts map[string]chartItem
+}
+
+func (c chartCache) get(name string) (string, bool) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	item, ok := c.charts[name]
+	if !ok {
+		return "", false
+	}
+	if time.Now().After(item.until) {
+		delete(c.charts, name)
+		return "", false
+	}
+	return item.data, true
+}
+
+func (c *chartCache) put(name string, data string) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	c.charts[name] = chartItem{
+		data:  data,
+		until: time.Now().Add(time.Minute),
+	}
+}
+
+func cacheKey(series collector.Series) string {
+	return fmt.Sprintf("%s:%s:%s", series.Query.Name, series.Query.Query, series.Query.Expression)
+}
+
+var (
+	cache = &chartCache{
+		mu:     &sync.Mutex{},
+		charts: map[string]chartItem{},
+	}
+)
+
+// Generates a line chart in html for a given series
 func GenerateLineChart(series collector.Series, maxPoints int) (string, error) {
+	if chart, ok := cache.get(cacheKey(series)); ok {
+		return chart, nil
+	}
+
 	line := charts.NewLine()
 
 	yopts := opts.YAxis{
@@ -47,7 +98,10 @@ func GenerateLineChart(series collector.Series, maxPoints int) (string, error) {
 	if err := cr.Render(&out); err != nil {
 		return "", err
 	}
-	return out.String(), nil
+	chart := out.String()
+	cache.put(cacheKey(series), chart)
+
+	return chart, nil
 }
 
 func getXAxis(series collector.Series) []string {
