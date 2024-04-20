@@ -2,8 +2,8 @@ name: Chart
 
 on:
   push:
-    tags:
-      - chart-*
+    branches:
+      - main
 
 jobs:
   release:
@@ -22,7 +22,19 @@ jobs:
           CHART_VERSION=$(echo ${{ github.ref_name }} | grep -Eo "v.*")
           echo "CHART_VERSION=${CHART_VERSION}" >> $GITHUB_ENV
 
+      - name: Login to ghcr.io
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check if chart exists
+        id: chartExists
+        run: docker manifest inspect ghcr.io/henrywhitaker3/prompage-helm:${{ env.CHART_VERSION }}
+
       - name: Push chart
+        if: failure() && steps.chartExists.outcome == 'failure'
         uses: appany/helm-oci-chart-releaser@v0.4.1
         with:
           name: prompage-helm
