@@ -8,6 +8,7 @@ import (
 	"github.com/henrywhitaker3/prompage/internal/app"
 	"github.com/henrywhitaker3/prompage/internal/config"
 	"github.com/henrywhitaker3/prompage/internal/querier"
+	"github.com/henrywhitaker3/prompage/internal/resources/views"
 	"github.com/spf13/pflag"
 )
 
@@ -38,6 +39,8 @@ func main() {
 
 	app := app.NewApp(conf, q)
 	app.Version = version
+
+	views.MustCompile()
 
 	cmd.LoadSubCommands(root, app)
 

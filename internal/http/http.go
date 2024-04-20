@@ -24,6 +24,7 @@ func NewHttp(app *app.App, cache *ResultCache) *Http {
 	e.Use(echoprometheus.NewMiddleware("prompage"))
 
 	e.GET("/", NewStatusPageHandler(app, cache))
+	e.GET("/:name", NewGetServiceHandler(app, cache))
 	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", http.FileServerFS(static.FS))))
 
 	e.GET("/api/services", NewGetAllHandler(app, cache))

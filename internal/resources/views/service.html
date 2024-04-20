@@ -1,0 +1,15 @@
+{{- define "content" }}
+{{- if not (eq .Graph "") }}
+<div class="flex flex-col justify-between items-center">
+    <div class="w-full flex flex-col md:flex-row justify-center md:items-baseline items-center">
+        <h1 class="text-xl font-bold md:inline-block md:mr-2 text-avocado-800" >{{ .Result.Service.Name }}</h1>
+        <span class="text-gray-500 text-sm">{{ $.Sprintf "%.2f" .Result.Uptime  }}% over the last {{ $.PrettyDuration .Result.Service.Query.Range }}</span>
+    </div>
+
+    <div class="h-64 md:h-96 w-full">{{ .Graph }}</div>
+</div>
+{{- end }}
+{{- end }}
+
+{{- define "scripts"}}
+{{- end }}

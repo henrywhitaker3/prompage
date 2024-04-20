@@ -26,6 +26,20 @@ services:
       range: 24h
       # Optional. The resoltuion of the range query (default: 5m)
       step: 5m
+      # Optional. Whether to generate graphs based on raw values or boolean values (default: false)
+      bool: false
+      # Optional. The units to display on any graphs (default: null)
+      units: ""
+# Settings to configure the UI
+ui:
+  # Optional. The title of the page (default: Status Page)
+  title: Status Page
+  # Optional. The interval that the page reloads on (default: 30s)
+  refresh: 30s
+  # Optional. Configure graph settings
+  graphs:
+    # The maximum number of data points to display on the graph (default: 200)
+    points: 200
 ```
 
 ## Installation

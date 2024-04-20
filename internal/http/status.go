@@ -1,14 +1,9 @@
 package http
 
 import (
-	"bytes"
-	"fmt"
-	"html/template"
-	"log"
 	"net/http"
 	"time"
 
-	"github.com/hako/durafmt"
 	"github.com/henrywhitaker3/prompage/internal/app"
 	"github.com/henrywhitaker3/prompage/internal/collector"
 	"github.com/henrywhitaker3/prompage/internal/config"
@@ -28,6 +23,8 @@ type group struct {
 }
 
 type statusData struct {
+	views.Builder
+
 	Config        config.Config
 	Results       []group
 	Age           time.Duration
@@ -37,17 +34,7 @@ type statusData struct {
 	Refresh       int
 }
 
-func (s statusData) Sprintf(format string, a ...any) string {
-	return fmt.Sprintf(format, a...)
-}
-
-func (s statusData) PrettyDuration(duration time.Duration) string {
-	return durafmt.Parse(duration).String()
-}
-
 func NewStatusPageHandler(app *app.App, cache *ResultCache) echo.HandlerFunc {
-	tmpl := template.Must(template.ParseFS(views.Views, "index.html"))
-
 	return func(c echo.Context) error {
 		res, t := cache.Get()
 		age := time.Since(t)
@@ -62,13 +49,12 @@ func NewStatusPageHandler(app *app.App, cache *ResultCache) echo.HandlerFunc {
 			Version:       app.Version,
 			Refresh:       int(app.Config.UI.RefreshInterval / time.Millisecond),
 		}
-		var buf bytes.Buffer
-		if err := tmpl.Execute(&buf, data); err != nil {
-			log.Printf("ERROR - could not render template: %s", err)
+
+		out, err := views.Build(views.STATUS, data)
+		if err != nil {
 			return err
 		}
-
-		return c.HTML(http.StatusOK, buf.String())
+		return c.HTML(http.StatusOK, out)
 	}
 }
 

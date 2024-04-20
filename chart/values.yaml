@@ -32,6 +32,11 @@ configuration:
     # How often the page reloads
     refresh: 30s
 
+    # Settings for the graphs
+    graphs:
+      # The maximum number of data points to display on the graph
+      points: 200
+
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""

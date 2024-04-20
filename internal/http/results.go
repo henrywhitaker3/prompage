@@ -45,14 +45,14 @@ func (c *ResultCache) Get() ([]collector.Result, time.Time) {
 	return c.results, c.time
 }
 
-func (c *ResultCache) GetService(name string) (collector.Result, error) {
-	results, _ := c.Get()
+func (c *ResultCache) GetService(name string) (collector.Result, time.Time, error) {
+	results, t := c.Get()
 	for _, r := range results {
 		if r.Service.Name == name {
-			return r, nil
+			return r, t, nil
 		}
 	}
-	return collector.Result{}, ErrNotFound
+	return collector.Result{}, t, ErrNotFound
 }
 
 func (c *ResultCache) Work(ctx context.Context) {

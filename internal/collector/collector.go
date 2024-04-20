@@ -3,11 +3,22 @@ package collector
 import (
 	"context"
 	"log"
+	"time"
 
 	"github.com/henrywhitaker3/prompage/internal/config"
 	"github.com/henrywhitaker3/prompage/internal/metrics"
 	"github.com/henrywhitaker3/prompage/internal/querier"
 )
+
+type SeriesItem struct {
+	Time  time.Time
+	Value float64
+}
+
+type Series struct {
+	Query config.Query
+	Data  []SeriesItem
+}
 
 type Result struct {
 	// The service the result corresponds to
@@ -18,6 +29,8 @@ type Result struct {
 	Status bool
 	// The percentage uptime for the specified duration
 	Uptime float32
+	// The series of values for the range query
+	Series Series
 }
 
 type Collector struct {
@@ -76,14 +89,28 @@ func (c *Collector) collectService(ctx context.Context, svc config.Service, ch c
 		log.Printf("ERROR - Failed to scrape status metric for %s query %s: %s", svc.Name, svc.Query.Name, err)
 		res.Success = false
 	}
-	uptime, err := c.q.Uptime(ctx, svc.Query)
+	uptime, series, err := c.q.Uptime(ctx, svc.Query)
 	if err != nil {
 		log.Printf("ERROR - Failed to scrape uptime metric for %s query %s: %s", svc.Name, svc.Query.Name, err)
 		res.Success = false
 	}
 
-	res.Success = true
+	res.Series = c.mapQuerierSeries(svc.Query, series)
 	res.Status = status
 	res.Uptime = uptime
 	ch <- res
+}
+
+func (c *Collector) mapQuerierSeries(q config.Query, s []querier.Item) Series {
+	out := Series{
+		Query: q,
+	}
+
+	for _, i := range s {
+		out.Data = append(out.Data, SeriesItem{
+			Time:  i.Time,
+			Value: i.Value,
+		})
+	}
+	return out
 }

@@ -5,7 +5,8 @@ module.exports = {
     'bg-lime-600',
     'bg-red-500',
     'bg-orange-400',
-    'text-white'
+    'text-white',
+    'h-full',
   ],
   theme: {
     extend: {
