@@ -39,39 +39,56 @@ func NewQuerier(conf *config.Config) (*Querier, error) {
 	}, nil
 }
 
-func (q *Querier) Uptime(ctx context.Context, query config.Query) (float32, error) {
+type Item struct {
+	Time  time.Time
+	Value float64
+}
+
+func (q *Querier) Uptime(ctx context.Context, query config.Query) (float32, []Item, error) {
 	val, _, err := q.client.QueryRange(ctx, query.Query, v1.Range{
 		Start: time.Now().Add(-query.Range),
 		End:   time.Now(),
 		Step:  query.Step,
 	})
 	if err != nil {
-		return 0, err
+		return 0, nil, err
 	}
 
 	switch r := val.(type) {
 	case model.Matrix:
 		if r.Len() < 1 {
-			return 0, errors.New("no results for query")
+			return 0, nil, errors.New("no results for query")
 		}
 
 		passing := 0
 		total := 0
+		series := []Item{}
 		for _, val := range r[0].Values {
 			res, err := q.vector(val.Value, query)
 			if err != nil {
-				panic(err)
+				return 0, nil, err
 			}
 			total++
+
+			value := float64(0)
 			if res {
 				passing++
+				value = 1
 			}
+			if !query.BoolValue {
+				f, err := q.asFloat(val.Value)
+				if err != nil {
+					return 0, nil, err
+				}
+				value = f
+			}
+			series = append(series, Item{Time: val.Timestamp.Time(), Value: value})
 		}
 
-		return (float32(passing) / float32(total)) * 100, nil
+		return (float32(passing) / float32(total)) * 100, series, nil
 	}
 
-	return 100, ErrTypeNotImplemented
+	return 100, nil, ErrTypeNotImplemented
 }
 
 func (q *Querier) Status(ctx context.Context, query config.Query) (bool, error) {
@@ -100,18 +117,24 @@ func (q *Querier) vector(v model.SampleValue, query config.Query) (bool, error) 
 	if err != nil {
 		return false, fmt.Errorf("failed to compile expr: %v", err)
 	}
-
-	val, err := strconv.ParseFloat(v.String(), 64)
+	val, err := q.asFloat(v)
 	if err != nil {
-		return false, fmt.Errorf("failed to parse result: %v", err)
+		return false, err
 	}
 
 	env["result"] = val
-
 	out, err := expr.Run(exp, env)
 	if err != nil {
 		return false, err
 	}
 
 	return out.(bool), nil
+}
+
+func (q *Querier) asFloat(v model.SampleValue) (float64, error) {
+	val, err := strconv.ParseFloat(v.String(), 64)
+	if err != nil {
+		return 0, fmt.Errorf("failed to parse float: %v", err)
+	}
+	return val, nil
 }

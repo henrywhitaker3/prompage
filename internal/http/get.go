@@ -35,7 +35,7 @@ func NewGetAllHandler(app *app.App, cache *ResultCache) echo.HandlerFunc {
 
 func NewGetHandler(app *app.App, cache *ResultCache) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		svc, err := cache.GetService(c.Param("name"))
+		svc, _, err := cache.GetService(c.Param("name"))
 		if err != nil {
 			if errors.Is(err, ErrNotFound) {
 				return c.JSON(http.StatusNotFound, struct{}{})

@@ -15,6 +15,8 @@ type Query struct {
 	Expression string        `yaml:"expression"`
 	Range      time.Duration `yaml:"range"`
 	Step       time.Duration `yaml:"step"`
+	BoolValue  bool          `yaml:"bool"`
+	Units      string        `yaml:"units"`
 }
 
 type Service struct {
@@ -27,11 +29,16 @@ type Service struct {
 type UI struct {
 	PageTitle       string        `yaml:"title"`
 	RefreshInterval time.Duration `yaml:"refresh"`
+	Graphs          Graphs        `yaml:"graphs"`
 }
 
 type Metrics struct {
 	Enabled bool `yaml:"enabled"`
 	Port    int  `yaml:"port"`
+}
+
+type Graphs struct {
+	Points int `yaml:"points"`
 }
 
 type Config struct {
@@ -99,6 +106,9 @@ func setDefaults(conf *Config) {
 	}
 	if conf.UI.RefreshInterval == 0 {
 		conf.UI.RefreshInterval = time.Second * 30
+	}
+	if conf.UI.Graphs.Points <= 0 {
+		conf.UI.Graphs.Points = 200
 	}
 }
 

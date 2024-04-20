@@ -3,6 +3,6 @@ package views
 import "embed"
 
 var (
-	//go:embed *
+	//go:embed *.html
 	Views embed.FS
 )
