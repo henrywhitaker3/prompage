@@ -44,9 +44,6 @@ jobs:
             echo "CHART_EXISTS=no" >> $GITHUB_OUTPUT
           fi
 
-      - name: debug outputs
-        run: echo ${{ steps.chartExists.outputs.CHART_EXISTS }}
-
       - name: Push chart
         if: steps.chartExists.outputs.CHART_EXISTS == 'no'
         uses: appany/helm-oci-chart-releaser@v0.4.1
