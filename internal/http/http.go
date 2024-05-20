@@ -4,11 +4,13 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/henrywhitaker3/prompage/internal/app"
 	"github.com/henrywhitaker3/prompage/internal/resources/static"
 	"github.com/labstack/echo-contrib/echoprometheus"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 type Http struct {
@@ -22,6 +24,9 @@ func NewHttp(app *app.App, cache *ResultCache) *Http {
 	e.HideBanner = true
 
 	e.Use(echoprometheus.NewMiddleware("prompage"))
+	e.Use(middleware.TimeoutWithConfig(middleware.TimeoutConfig{
+		Timeout: time.Second * 5,
+	}))
 
 	e.GET("/", NewStatusPageHandler(app, cache))
 	e.GET("/:name", NewGetServiceHandler(app, cache))

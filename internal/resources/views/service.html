@@ -7,6 +7,13 @@
     </div>
 
     <div class="h-64 md:h-96 w-full">{{ .Graph }}</div>
+
+    <div class="w-full">
+    {{- range $name, $graph := .Extras }}
+        <h2 class="text-center text-avocado-800">{{ $name }}</h2>
+        <div class="h-64 md:h-96 w-full">{{ $graph }}</div>
+    {{- end }}
+    </div>
 </div>
 {{- end }}
 {{- end }}

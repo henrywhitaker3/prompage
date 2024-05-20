@@ -31,6 +31,8 @@ type Result struct {
 	Uptime float32
 	// The series of values for the range query
 	Series Series
+	// The servies of extra queries to graph
+	Extras map[string]Series
 }
 
 type Collector struct {
@@ -81,6 +83,7 @@ func (c *Collector) collectService(ctx context.Context, svc config.Service, ch c
 		Status:  false,
 		Success: true,
 		Uptime:  0,
+		Extras:  map[string]Series{},
 	}
 	log.Printf("collecting metrics for %s\n", svc.Name)
 
@@ -93,6 +96,14 @@ func (c *Collector) collectService(ctx context.Context, svc config.Service, ch c
 	if err != nil {
 		log.Printf("ERROR - Failed to scrape uptime metric for %s query %s: %s", svc.Name, svc.Query.Name, err)
 		res.Success = false
+	}
+
+	for _, extra := range svc.Extras {
+		_, series, err := c.q.Uptime(ctx, extra)
+		if err != nil {
+			log.Printf("ERROR - Failed to scrape uptime metric for %s query %s: %s", svc.Name, extra.Name, err)
+		}
+		res.Extras[extra.Name] = c.mapQuerierSeries(extra, series)
 	}
 
 	res.Series = c.mapQuerierSeries(svc.Query, series)

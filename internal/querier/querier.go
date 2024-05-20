@@ -64,24 +64,25 @@ func (q *Querier) Uptime(ctx context.Context, query config.Query) (float32, []It
 		total := 0
 		series := []Item{}
 		for _, val := range r[0].Values {
-			res, err := q.vector(val.Value, query)
-			if err != nil {
-				return 0, nil, err
-			}
-			total++
-
 			value := float64(0)
-			if res {
-				passing++
-				value = 1
-			}
-			if !query.BoolValue {
+			if query.BoolValue {
+				res, err := q.vector(val.Value, query)
+				if err != nil {
+					return 0, nil, err
+				}
+				if res {
+					passing++
+					value = 1
+				}
+			} else {
 				f, err := q.asFloat(val.Value)
 				if err != nil {
 					return 0, nil, err
 				}
 				value = f
 			}
+			total++
+
 			series = append(series, Item{Time: val.Timestamp.Time(), Value: value})
 		}
 
