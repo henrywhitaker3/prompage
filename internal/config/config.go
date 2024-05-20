@@ -20,10 +20,10 @@ type Query struct {
 }
 
 type Service struct {
-	Name  string `yaml:"name"`
-	Query Query  `yaml:"query"`
-	Group string `yaml:"group"`
-	// Extras []Query `yaml:"extras"`
+	Name   string  `yaml:"name"`
+	Query  Query   `yaml:"query"`
+	Group  string  `yaml:"group"`
+	Extras []Query `yaml:"extras"`
 }
 
 type UI struct {
@@ -85,14 +85,17 @@ func setDefaults(conf *Config) {
 
 	for i, svc := range conf.Services {
 		svc.Query.Name = "main"
-		if svc.Query.Range == 0 {
-			svc.Query.Range = time.Hour * 24
-		}
-		if svc.Query.Step == 0 {
-			svc.Query.Step = time.Minute * 5
-		}
 		if svc.Group == "" {
 			svc.Group = "default"
+		}
+		setDefaultQueryValues(&svc.Query)
+
+		for i, query := range svc.Extras {
+			if query.Expression == "" {
+				query.Expression = "float(result)"
+			}
+			setDefaultQueryValues(&query)
+			svc.Extras[i] = query
 		}
 		conf.Services[i] = svc
 	}
@@ -112,9 +115,26 @@ func setDefaults(conf *Config) {
 	}
 }
 
+func setDefaultQueryValues(q *Query) {
+	if q.Range == 0 {
+		q.Range = time.Hour * 24
+	}
+	if q.Step == 0 {
+		q.Step = time.Minute * 5
+	}
+}
+
 func (c *Config) Validate() error {
 	if c.Prometheus == "" {
 		return errors.New("prometheus cannot be empty")
+	}
+
+	for _, svc := range c.Services {
+		for _, extra := range svc.Extras {
+			if extra.Name == "" {
+				return errors.New("extra query name cannot be empty")
+			}
+		}
 	}
 
 	return nil

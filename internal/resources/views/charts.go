@@ -67,10 +67,14 @@ func GenerateLineChart(series collector.Series, maxPoints int) (string, error) {
 
 	yopts := opts.YAxis{
 		Show: false,
+		Type: "value",
 	}
 	if series.Query.BoolValue {
 		yopts.Max = 2
 		yopts.Min = 0
+	}
+	if series.Query.Units != "" {
+		yopts.Name = series.Query.Units
 	}
 
 	line.SetGlobalOptions(
@@ -78,7 +82,10 @@ func GenerateLineChart(series collector.Series, maxPoints int) (string, error) {
 			Theme: types.ThemeWesteros,
 		}),
 		charts.WithYAxisOpts(yopts),
-		charts.WithXAxisOpts(opts.XAxis{Show: false}),
+		charts.WithXAxisOpts(opts.XAxis{
+			Show: false,
+			Type: "time",
+		}),
 		charts.WithLegendOpts(opts.Legend{
 			Show: false,
 		}),
@@ -86,7 +93,7 @@ func GenerateLineChart(series collector.Series, maxPoints int) (string, error) {
 
 	cd := condense(series, maxPoints)
 
-	line.SetXAxis(getXAxis(cd)).
+	line.SetXAxis(nil).
 		AddSeries("Metric", getYAxis(cd)).
 		SetSeriesOptions(
 			charts.WithLineChartOpts(opts.LineChart{Smooth: true, Color: "#5c6848"}),
@@ -104,19 +111,11 @@ func GenerateLineChart(series collector.Series, maxPoints int) (string, error) {
 	return chart, nil
 }
 
-func getXAxis(series collector.Series) []string {
-	out := []string{}
-	for _, i := range series.Data {
-		out = append(out, i.Time.String())
-	}
-	return out
-}
-
 func getYAxis(series collector.Series) []opts.LineData {
 	out := []opts.LineData{}
 	for _, i := range series.Data {
 		out = append(out, opts.LineData{
-			Value: i.Value,
+			Value: []interface{}{i.Time.Format(time.RFC3339), i.Value},
 		})
 	}
 	return out
