@@ -64,10 +64,12 @@ func NewGetServiceHandler(app *app.App, cache *ResultCache) echo.HandlerFunc {
 		}
 
 		data := getServiceData{
-			Age:    time.Since(age).Round(time.Second),
-			Result: svc,
-			Graph:  template.HTML(graph.Out()),
-			Extras: map[string]template.HTML{},
+			Config:  *app.Config,
+			Version: app.Version,
+			Age:     time.Since(age).Round(time.Second),
+			Result:  svc,
+			Graph:   template.HTML(graph.Out()),
+			Extras:  map[string]template.HTML{},
 		}
 
 		for name, res := range extraGraphs {
