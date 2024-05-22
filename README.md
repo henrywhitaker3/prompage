@@ -11,8 +11,15 @@ A stateless status page using data from prometheus. [Demo page](https://status.h
 The status page is configured using a yaml config file:
 
 ```yaml
-# The url of the prometheus instance you want to query
-prometheus: http://prometheus:9090
+datasources:
+  - name: prometheus
+    url: http://prometheus:9000
+    type: prometheus
+  - name: datadog
+    url: https://api.datadoghq.eu
+    token: XXXXXXXX
+    type: datadog
+
 services:
   - name: Postgres
     # Optional. Group services together
@@ -30,6 +37,8 @@ services:
       bool: false
       # Optional. The units to display on any graphs (default: null)
       units: ""
+      # Optional. The datasource to use for the query (default: prometheus)
+      datasource: prometheus
 # Settings to configure the UI
 ui:
   # Optional. The title of the page (default: Status Page)

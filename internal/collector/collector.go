@@ -36,14 +36,14 @@ type Result struct {
 }
 
 type Collector struct {
-	q    *querier.Querier
-	svcs []config.Service
+	queriers map[string]querier.Querier
+	svcs     []config.Service
 }
 
-func NewCollector(q *querier.Querier, svcs []config.Service) *Collector {
+func NewCollector(svcs []config.Service, qs map[string]querier.Querier) *Collector {
 	return &Collector{
-		q:    q,
-		svcs: svcs,
+		queriers: qs,
+		svcs:     svcs,
 	}
 }
 
@@ -87,19 +87,19 @@ func (c *Collector) collectService(ctx context.Context, svc config.Service, ch c
 	}
 	log.Printf("collecting metrics for %s\n", svc.Name)
 
-	status, err := c.q.Status(ctx, svc.Query)
+	status, err := c.queriers[svc.Query.Datasource].Status(ctx, svc.Query)
 	if err != nil {
 		log.Printf("ERROR - Failed to scrape status metric for %s query %s: %s", svc.Name, svc.Query.Name, err)
 		res.Success = false
 	}
-	uptime, series, err := c.q.Uptime(ctx, svc.Query)
+	uptime, series, err := c.queriers[svc.Query.Datasource].Uptime(ctx, svc.Query)
 	if err != nil {
 		log.Printf("ERROR - Failed to scrape uptime metric for %s query %s: %s", svc.Name, svc.Query.Name, err)
 		res.Success = false
 	}
 
 	for _, extra := range svc.Extras {
-		_, series, err := c.q.Uptime(ctx, extra)
+		_, series, err := c.queriers[extra.Datasource].Uptime(ctx, extra)
 		if err != nil {
 			log.Printf("ERROR - Failed to scrape uptime metric for %s query %s: %s", svc.Name, extra.Name, err)
 		}
