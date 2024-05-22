@@ -49,10 +49,10 @@ type Graphs struct {
 }
 
 type Datasource struct {
-	Name  string `yaml:"name"`
-	Type  string `yaml:"type"`
-	Url   string `yaml:"url"`
-	Token string `yaml:"token,omitempty"`
+	Name   string            `yaml:"name"`
+	Type   string            `yaml:"type"`
+	Url    string            `yaml:"url"`
+	Extras map[string]string `yaml:"extras"`
 }
 
 type Config struct {
@@ -114,6 +114,7 @@ func setDefaults(conf *Config) {
 		if svc.Group == "" {
 			svc.Group = "default"
 		}
+		svc.Query.BoolValue = true
 		setDefaultQueryValues(&svc.Query)
 
 		for i, query := range svc.Extras {
@@ -171,6 +172,14 @@ func (c *Config) Validate() error {
 		}
 		if ds.Url == "" {
 			return errors.New("datasources must have a url configured")
+		}
+		if ds.Type == "datadog" {
+			if _, ok := ds.Extras["apiKey"]; !ok {
+				return errors.New("datadog extra apiKey must be set")
+			}
+			if _, ok := ds.Extras["appKey"]; !ok {
+				return errors.New("datadog extra appKey must be set")
+			}
 		}
 	}
 

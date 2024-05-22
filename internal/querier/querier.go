@@ -38,7 +38,11 @@ func BuildQueriers(sources []config.Datasource) (map[string]Querier, error) {
 			}
 			out[ds.Name] = q
 		case "datadog":
-			return nil, errors.New("datadog not implemented yet")
+			q, err := NewDatadog(ds)
+			if err != nil {
+				return nil, err
+			}
+			out[ds.Name] = q
 		default:
 			return nil, ErrInvalidDatasourceMapping
 		}

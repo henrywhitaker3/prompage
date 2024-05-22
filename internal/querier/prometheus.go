@@ -74,7 +74,16 @@ func (q *Prometheus) Uptime(ctx context.Context, query config.Query) (float32, [
 				if err != nil {
 					return 0, nil, err
 				}
-				value = f
+				env := map[string]any{"result": f}
+				exp, err := expr.Compile(query.Expression, expr.Env(env), expr.AsFloat64())
+				if err != nil {
+					return 0, nil, err
+				}
+				out, err := expr.Run(exp, env)
+				if err != nil {
+					return 0, nil, err
+				}
+				value = out.(float64)
 			}
 			total++
 
