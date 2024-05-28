@@ -27,6 +27,9 @@ func NewHttp(app *app.App, cache *ResultCache) *Http {
 	e.Use(middleware.TimeoutWithConfig(middleware.TimeoutConfig{
 		Timeout: time.Second * 5,
 	}))
+	if *app.Config.HttpLogs {
+		e.Use(middleware.Logger())
+	}
 
 	e.GET("/", NewStatusPageHandler(app, cache))
 	e.GET("/:name", NewGetServiceHandler(app, cache))

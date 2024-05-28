@@ -22,6 +22,9 @@ configuration:
   # How often the pod queries prometheus for metrics
   refresh: 30s
 
+  # Whether to print http logs to stdout
+  http_logs: true
+
   # Whether to expose prompage metrics
   metrics:
     enabled: false
