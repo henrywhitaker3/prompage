@@ -161,7 +161,16 @@ func chunk(items []collector.SeriesItem, perBucket, buckets int) [][]collector.S
 
 	// Pull the last item out so it doesn't leak goroutines every graph load
 	run = false
-	<-feed
+	// If there is noting to pull out, then this will block, so run it in its
+	// own goroutine with a timeout
+	go func() {
+		select {
+		case <-time.After(time.Second):
+			return
+		case <-feed:
+			return
+		}
+	}()
 
 	return out
 }
