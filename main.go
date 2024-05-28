@@ -31,13 +31,14 @@ func main() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	q, err := querier.NewQuerier(conf)
+
+	qs, err := querier.BuildQueriers(conf.Datasources)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 
-	app := app.NewApp(conf, q)
+	app := app.NewApp(conf, qs)
 	app.Version = version
 
 	views.MustCompile()

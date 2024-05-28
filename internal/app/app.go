@@ -9,17 +9,17 @@ import (
 type App struct {
 	Version   string
 	Config    *config.Config
-	Querier   *querier.Querier
+	Queriers  map[string]querier.Querier
 	Collector *collector.Collector
 }
 
-func NewApp(conf *config.Config, q *querier.Querier) *App {
+func NewApp(conf *config.Config, q map[string]querier.Querier) *App {
 	app := &App{
-		Config:  conf,
-		Querier: q,
+		Config:   conf,
+		Queriers: q,
 	}
 
-	app.Collector = collector.NewCollector(app.Querier, conf.Services)
+	app.Collector = collector.NewCollector(conf.Services, q)
 
 	return app
 }

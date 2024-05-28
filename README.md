@@ -11,8 +11,17 @@ A stateless status page using data from prometheus. [Demo page](https://status.h
 The status page is configured using a yaml config file:
 
 ```yaml
-# The url of the prometheus instance you want to query
-prometheus: http://prometheus:9090
+datasources:
+  - name: prometheus
+    url: http://prometheus:9000
+    type: prometheus
+  - name: datadog
+    url: datadoghq.eu
+    type: datadog
+    extras:
+      appKey: XXXXX
+      apiKey: XXXXX
+
 services:
   - name: Postgres
     # Optional. Group services together
@@ -26,10 +35,20 @@ services:
       range: 24h
       # Optional. The resoltuion of the range query (default: 5m)
       step: 5m
-      # Optional. Whether to generate graphs based on raw values or boolean values (default: false)
+      # Optional. Whether to generate graphs based on raw values or boolean values (default: false).
+      # This value is always set to true for the main query (i.e. services[].query.bool), but can be user-configured
+      # for the extra queries (i.e. services[].extras[].bool)
       bool: false
       # Optional. The units to display on any graphs (default: null)
       units: ""
+      # Optional. The datasource to use for the query (default: prometheus)
+      datasource: prometheus
+  - name: Http Server
+    group: Web
+    query:
+      query: sum:http_server.error_rate{*}.as_rate()
+      datasource: datadog
+      expression: (100 - float(result)) > 99.99
 # Settings to configure the UI
 ui:
   # Optional. The title of the page (default: Status Page)
