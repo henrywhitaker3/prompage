@@ -46,7 +46,7 @@ jobs:
 
       - name: Push chart
         if: steps.chartExists.outputs.CHART_EXISTS == 'no'
-        uses: appany/helm-oci-chart-releaser@v0.4.1
+        uses: appany/helm-oci-chart-releaser@v0.4.2
         with:
           name: prompage-helm
           repository: henrywhitaker3
