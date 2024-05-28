@@ -7,8 +7,17 @@ image:
   tag: ""
 
 configuration:
-  # The url of the prometheus query api
-  prometheus: ""
+  # The datasources to use for queries
+  datasources:
+    - name: prometheus
+      type: prometheus
+      url: ""
+    # - name: datadog
+    #   type: datadog
+    #   url: datadoghq.eu
+    #   extras:
+    #     apiKey: ""
+    #     appKey: ""
 
   # How often the pod queries prometheus for metrics
   refresh: 30s
