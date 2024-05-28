@@ -4,7 +4,7 @@ go 1.22.2
 
 require (
 	github.com/DataDog/datadog-api-client-go/v2 v2.26.0
-	github.com/expr-lang/expr v1.16.7
+	github.com/expr-lang/expr v1.16.9
 	github.com/go-echarts/go-echarts/v2 v2.3.3
 	github.com/hako/durafmt v0.0.0-20210608085754-5c1018a4e16b
 	github.com/henrywhitaker3/flow v1.5.0
