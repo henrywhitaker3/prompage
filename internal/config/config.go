@@ -56,10 +56,11 @@ type Datasource struct {
 }
 
 type Config struct {
-	Port     int       `yaml:"port"`
-	HttpLogs *bool     `yaml:"http_logs"`
-	Metrics  Metrics   `yaml:"metrics"`
-	Services []Service `yaml:"services"`
+	Port       int       `yaml:"port"`
+	ProbesPort int       `yaml:"probes_port"`
+	HttpLogs   *bool     `yaml:"http_logs"`
+	Metrics    Metrics   `yaml:"metrics"`
+	Services   []Service `yaml:"services"`
 
 	Datasources []Datasource `yaml:"datasources"`
 
@@ -100,6 +101,9 @@ func setDefaults(conf *Config) {
 	}
 	if conf.Metrics.Port == 0 {
 		conf.Metrics.Port = 9743
+	}
+	if conf.ProbesPort == 0 {
+		conf.ProbesPort = 9744
 	}
 	if conf.HttpLogs == nil {
 		en := true

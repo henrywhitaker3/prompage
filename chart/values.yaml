@@ -25,6 +25,9 @@ configuration:
   # Whether to print http logs to stdout
   http_logs: true
 
+  # The port the health/readiness probes listen on
+  probes_port: 9744
+
   # Whether to expose prompage metrics
   metrics:
     enabled: false
