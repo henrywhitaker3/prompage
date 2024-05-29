@@ -10,6 +10,7 @@ import (
 	"syscall"
 
 	"github.com/henrywhitaker3/prompage/internal/app"
+	"github.com/henrywhitaker3/prompage/internal/health"
 	"github.com/henrywhitaker3/prompage/internal/http"
 	"github.com/henrywhitaker3/prompage/internal/metrics"
 	"github.com/spf13/cobra"
@@ -34,6 +35,7 @@ func NewServeCommand(app *app.App) *cobra.Command {
 			http := http.NewHttp(app, cache)
 			metrics := metrics.NewServer(app.Config.Metrics.Port)
 			metrics.Init()
+			probes := health.NewHealth(app.Config.ProbesPort)
 
 			go cache.Work(ctx)
 			go func() {
@@ -54,9 +56,18 @@ func NewServeCommand(app *app.App) *cobra.Command {
 					}
 				}()
 			}
+			go func() {
+				if err := probes.Start(); err != nil {
+					if !errors.Is(err, stdhttp.ErrServerClosed) {
+						fmt.Println(fmt.Errorf("probes server failed: %v", err))
+						cancel()
+					}
+				}
+			}()
 
 			<-ctx.Done()
 			metrics.Stop(context.Background())
+			probes.Stop(context.Background())
 			return http.Stop(context.Background())
 		},
 	}
