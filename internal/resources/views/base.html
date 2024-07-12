@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" {{ if ne .Config.UI.Theme "auto" }}class="{{ .Config.UI.Theme }}"{{ end }}>
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,12 +7,12 @@
         <link rel="icon" type="image/png" href="/static/icon.png" />
         <title>{{ .Config.UI.PageTitle }}</title>
     </head>
-    <body class="mx-auto min-h-dvh w-full md:w-3/4 p-6 md:p-8 lg:p-6 lg:w-1/2 flex flex-col justify-between bg-neutral-50">
+    <body class="mx-auto min-h-dvh w-full md:w-3/4 p-6 md:p-8 lg:p-6 lg:w-1/2 flex flex-col justify-between bg-neutral-50 dark:bg-slate-900">
         <div>
             {{ template "content" . }}
         </div>
 
-        <div class="mt-6 text-center text-gray-400">
+        <div class="mt-6 text-center text-gray-400 dark:text-gray-200">
             Built with <a class="text-avocado-600 hover:text-avocado-500" href="https://github.com/henrywhitaker3/prompage">PromPage</a> |
             Checked {{ .Age }} ago
         </div>
