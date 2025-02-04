@@ -10,7 +10,7 @@ require (
 	github.com/henrywhitaker3/flow v1.10.0
 	github.com/labstack/echo-contrib v0.17.1
 	github.com/labstack/echo/v4 v4.13.3
-	github.com/prometheus/client_golang v1.20.4
+	github.com/prometheus/client_golang v1.20.5
 	github.com/prometheus/common v0.62.0
 	github.com/spf13/cobra v1.8.1
 	github.com/spf13/pflag v1.0.6
