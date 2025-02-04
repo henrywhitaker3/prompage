@@ -7,7 +7,7 @@ require (
 	github.com/expr-lang/expr v1.16.9
 	github.com/go-echarts/go-echarts/v2 v2.3.3
 	github.com/hako/durafmt v0.0.0-20210608085754-5c1018a4e16b
-	github.com/henrywhitaker3/flow v1.6.2
+	github.com/henrywhitaker3/flow v1.10.0
 	github.com/labstack/echo-contrib v0.17.1
 	github.com/labstack/echo/v4 v4.12.0
 	github.com/prometheus/client_golang v1.20.4
