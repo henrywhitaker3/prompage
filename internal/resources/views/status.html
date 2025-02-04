@@ -14,10 +14,10 @@
     {{- if not (eq .Name "default") }}
     <h2 class="text-xl mb-2 pl-1 text-avocado-800 dark:text-avocado-100">{{ .Name }}</h2>
     {{- end }}
-    <div class="flex flex-col items-center justify-center rounded-md shadow-md dark:shadow-slate-600">
+    <div class="flex flex-col items-center justify-center rounded-md shadow-md dark:shadow-none dark:bg-zinc-800">
         {{- range .Results }}
         <a href="/{{ .Service.Name }}" class="block w-full">
-            <div class="flex justify-between items-center w-full py-6 px-6 md:px-8 lg:px-12 border-b dark:border-slate-600">
+            <div class="flex justify-between items-center w-full py-6 px-6 md:px-8 lg:px-12 border-b dark:border-none">
                 <div>
                     <h3 class="text-lg font-bold md:inline-block md:mr-2 text-avocado-800 dark:text-avocado-100" >{{ .Service.Name }}</h3>
                     <span class="text-gray-500 dark:text-gray-300 text-sm">{{ $.Sprintf "%.2f" .Uptime  }}% over the last {{ $.PrettyDuration .Service.Query.Range }}</span>

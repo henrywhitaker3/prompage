@@ -3,9 +3,13 @@ module.exports = {
   content: ["internal/resources/views/*.html"],
   safelist: [
     'bg-lime-600',
+    'dark:bg-lime-800',
     'bg-red-500',
+    'dark:bg-red-800',
     'bg-orange-400',
+    'dark:bg-orange-800',
     'text-white',
+    'dark:text-white',
     'h-full',
   ],
   theme: {

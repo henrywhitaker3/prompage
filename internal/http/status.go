@@ -79,13 +79,13 @@ func operational(res []collector.Result) string {
 func bannerClasses(outage string) string {
 	switch outage {
 	case OutageNone:
-		return "bg-lime-600 text-white"
+		return "bg-lime-600 dark:bg-lime-800 text-white"
 	case OutageFull:
-		return "bg-red-500 text-white"
+		return "bg-red-500 dark:bg-red-800 text-white"
 	case OutagePartial:
 		fallthrough
 	default:
-		return "bg-orange-400"
+		return "bg-orange-400 dark:bg-orange-800 dark:text-white"
 	}
 }
 
