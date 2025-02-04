@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"io"
 
+	"github.com/go-echarts/go-echarts/v2/render"
 	chartrender "github.com/go-echarts/go-echarts/v2/render"
 )
 
@@ -57,4 +58,12 @@ func (r *chartRenderer) Render(w io.Writer) error {
 
 	err := tpl.ExecuteTemplate(w, tplName, r.c)
 	return err
+}
+
+func (r *chartRenderer) RenderContent() []byte {
+	panic("not implemented")
+}
+
+func (r *chartRenderer) RenderSnippet() render.ChartSnippet {
+	panic("not implemented")
 }

@@ -66,7 +66,7 @@ func GenerateLineChart(series collector.Series, maxPoints int) (string, error) {
 	line := charts.NewLine()
 
 	yopts := opts.YAxis{
-		Show: false,
+		Show: opts.Bool(true),
 		Type: "value",
 	}
 	if series.Query.BoolValue {
@@ -83,11 +83,11 @@ func GenerateLineChart(series collector.Series, maxPoints int) (string, error) {
 		}),
 		charts.WithYAxisOpts(yopts),
 		charts.WithXAxisOpts(opts.XAxis{
-			Show: false,
+			Show: opts.Bool(true),
 			Type: "time",
 		}),
 		charts.WithLegendOpts(opts.Legend{
-			Show: false,
+			Show: opts.Bool(false),
 		}),
 	)
 
@@ -96,8 +96,14 @@ func GenerateLineChart(series collector.Series, maxPoints int) (string, error) {
 	line.SetXAxis(nil).
 		AddSeries("Metric", getYAxis(cd)).
 		SetSeriesOptions(
-			charts.WithLineChartOpts(opts.LineChart{Smooth: true, Color: "#5c6848"}),
+			charts.WithLineChartOpts(opts.LineChart{
+				Smooth:     opts.Bool(true),
+				ShowSymbol: opts.Bool(false),
+			}),
 			charts.WithAreaStyleOpts(opts.AreaStyle{Opacity: 0.2, Color: "#5c6848"}),
+			charts.WithLineStyleOpts(opts.LineStyle{
+				Color: "#5c6848",
+			}),
 		)
 
 	cr := newChartRenderer(line, line.Validate)
