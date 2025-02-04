@@ -1,5 +1,5 @@
-github.com/DataDog/datadog-api-client-go/v2 v2.26.0 h1:bZr0hu+hx8L91+yU5EGw8wK3FlCVEIashpx+cylWsf0=
-github.com/DataDog/datadog-api-client-go/v2 v2.26.0/go.mod h1:QKOu6vscsh87fMY1lHfLEmNSunyXImj8BUaUWJXOehc=
+github.com/DataDog/datadog-api-client-go/v2 v2.34.0 h1:0VVmv8uZg8vdBuEpiF2nBGUezl2QITrxdEsLgh38j8M=
+github.com/DataDog/datadog-api-client-go/v2 v2.34.0/go.mod h1:d3tOEgUd2kfsr9uuHQdY+nXrWp4uikgTgVCPdKNK30U=
 github.com/DataDog/zstd v1.5.2 h1:vUG4lAyuPCXO0TLbXvPv7EB7cNK1QV/luu55UHLrrn8=
 github.com/DataDog/zstd v1.5.2/go.mod h1:g4AWEaM3yOg3HYfnJ3YIawPnVdXJh9QME85blwSAmyw=
 github.com/beorn7/perks v1.0.1 h1:VlbKKnNfV8bJzeqoa4cOKqO6bYr3WgKZxO8Z16+hsOM=
