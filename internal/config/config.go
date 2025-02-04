@@ -37,6 +37,7 @@ type UI struct {
 	PageTitle       string        `yaml:"title"`
 	RefreshInterval time.Duration `yaml:"refresh"`
 	Graphs          Graphs        `yaml:"graphs"`
+	Theme           string        `yaml:"theme"`
 }
 
 type Metrics struct {
@@ -148,6 +149,9 @@ func setDefaults(conf *Config) {
 	}
 	if conf.UI.Graphs.Points <= 0 {
 		conf.UI.Graphs.Points = 200
+	}
+	if conf.UI.Theme == "" {
+		conf.UI.Theme = "light"
 	}
 }
 

@@ -53,6 +53,12 @@ services:
 ui:
   # Optional. The title of the page (default: Status Page)
   title: Status Page
+  # Optional. The theme of the page (default: light)
+  # Options:
+  # - auto: Use color scheme of OS
+  # - light: Use light color scheme
+  # - dark: Use dark color scheme
+  theme: auto
   # Optional. The interval that the page reloads on (default: 30s)
   refresh: 30s
   # Optional. Configure graph settings
