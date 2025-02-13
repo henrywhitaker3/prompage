@@ -1,9 +1,10 @@
 {
   "dependencies": {
-    "tailwindcss": "^3.4.3"
+    "@tailwindcss/cli": "^4.0.6",
+    "tailwindcss": "^4.0.0"
   },
   "scripts": {
-    "build": "tailwindcss build -o internal/resources/static/tailwind.css",
-    "watch": "tailwindcss build -o internal/resources/static/tailwind.css --watch"
+    "build": "npx @tailwindcss/cli -i tailwind.css -o internal/resources/static/tailwind.css",
+    "watch": "npx @tailwindcss/cli -i tailwind.css -o internal/resources/static/tailwind.css --watch"
   }
 }

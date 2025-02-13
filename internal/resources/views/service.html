@@ -6,11 +6,11 @@
         <span class="text-gray-500 dark:text-gray-300 text-sm">{{ $.Sprintf "%.2f" .Result.Uptime  }}% over the last {{ $.PrettyDuration .Result.Service.Query.Range }}</span>
     </div>
 
-    <div class="h-64 md:h-96 w-full border dark:border-none dark:bg-zinc-800 rounded-md shadow-md mb-6">{{ .Graph }}</div>
+    <div class="h-64 md:h-96 w-full border border-gray-200 dark:border-none dark:bg-zinc-800 rounded-md shadow-md mb-6">{{ .Graph }}</div>
 
     {{- if .Extras }}
     {{- range $name, $graph := .Extras }}
-    <div class="w-full border dark:border-none dark:bg-zinc-800 rounded-md shadow-md pt-4 mb-6">
+    <div class="w-full border border-gray-200 dark:border-none dark:bg-zinc-800 rounded-md shadow-md pt-4 mb-6">
         <h2 class="text-center text-avocado-800 dark:text-avocado-100">{{ $name }}</h2>
         <div class="h-64 md:h-96 w-full">{{ $graph }}</div>
     </div>
