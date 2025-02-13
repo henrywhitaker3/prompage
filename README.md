@@ -65,6 +65,11 @@ ui:
   graphs:
     # The maximum number of data points to display on the graph (default: 200)
     points: 200
+  header:
+    # Enable the Page header
+    enabled: false
+    # Logo URL to display in the header
+    logo: https://raw.githubusercontent.com/henrywhitaker3/prompage/refs/heads/main/internal/resources/static/icon.png
 ```
 
 ## Installation

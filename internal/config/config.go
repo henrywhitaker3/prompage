@@ -38,6 +38,12 @@ type UI struct {
 	RefreshInterval time.Duration `yaml:"refresh"`
 	Graphs          Graphs        `yaml:"graphs"`
 	Theme           string        `yaml:"theme"`
+	Header          UIHeader      `yaml:"header`
+}
+
+type UIHeader struct {
+	Enabled bool   `yaml:"enabled"`
+	Logo    string `yaml:"logo"`
 }
 
 type Metrics struct {
@@ -152,6 +158,9 @@ func setDefaults(conf *Config) {
 	}
 	if conf.UI.Theme == "" {
 		conf.UI.Theme = "light"
+	}
+	if conf.UI.Header.Logo == "" {
+		conf.UI.Header.Logo = "https://raw.githubusercontent.com/henrywhitaker3/prompage/refs/heads/main/internal/resources/static/icon.png"
 	}
 }
 
