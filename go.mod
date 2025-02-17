@@ -14,7 +14,7 @@ require (
 	github.com/labstack/echo/v4 v4.13.3
 	github.com/prometheus/client_golang v1.20.5
 	github.com/prometheus/common v0.62.0
-	github.com/spf13/cobra v1.8.1
+	github.com/spf13/cobra v1.9.1
 	github.com/spf13/pflag v1.0.6
 	gopkg.in/yaml.v3 v3.0.1
 )
