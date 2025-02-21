@@ -1,9 +1,7 @@
-name: Release
+name: Preview
 
 on:
-  push:
-    tags:
-      - 'v*'
+  push: {}
 
 jobs:
   package:
@@ -26,7 +24,6 @@ jobs:
         with:
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:latest
             ghcr.io/${{ github.repository }}:${{ github.ref_name }}
           build-args: |
             VERSION=${{ github.ref_name }}
