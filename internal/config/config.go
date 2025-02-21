@@ -38,6 +38,12 @@ type UI struct {
 	RefreshInterval time.Duration `yaml:"refresh"`
 	Graphs          Graphs        `yaml:"graphs"`
 	Theme           string        `yaml:"theme"`
+	Header          UIHeader      `yaml:"header`
+}
+
+type UIHeader struct {
+	Enabled bool   `yaml:"enabled"`
+	Logo    string `yaml:"logo"`
 }
 
 type Metrics struct {

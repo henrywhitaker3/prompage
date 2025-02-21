@@ -1,22 +1,37 @@
 <!DOCTYPE html>
-<html lang="en" {{ if ne .Config.UI.Theme "auto" }}class="{{ .Config.UI.Theme }}"{{ end }}>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="/static/tailwind.css?v={{ .Version }}" />
-        <link rel="icon" type="image/png" href="/static/icon.png" />
-        <title>{{ .Config.UI.PageTitle }}</title>
-    </head>
-    <body class="mx-auto min-h-dvh w-full md:w-3/4 p-6 md:p-8 lg:p-6 lg:w-1/2 flex flex-col justify-between bg-neutral-50 dark:bg-zinc-900">
-        <div>
-            {{ template "content" . }}
-        </div>
+<html lang="en" {{ if ne .Config.UI.Theme "auto" }}class="{{ .Config.UI.Theme }}" {{ end }}>
 
-        <div class="mt-6 text-center text-gray-400 dark:text-gray-200">
-            Built with <a class="text-avocado-600 hover:text-avocado-500" href="https://github.com/henrywhitaker3/prompage">PromPage</a> |
-            Checked {{ .Age }} ago
-        </div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/tailwind.css?v={{ .Version }}" />
+    <link rel="icon" type="image/png" href="/static/icon.png" />
+    <title>{{ .Config.UI.PageTitle }}</title>
+</head>
 
-        {{ template "scripts" . }}
-    </body>
+<body
+    class="mx-auto min-h-dvh w-full md:w-3/4 p-6 md:p-8 lg:p-6 lg:w-1/2 flex flex-col justify-between bg-neutral-50 dark:bg-zinc-900">
+    {{ if .Config.UI.Header.Enabled }}
+    <div class="mb-4">
+        <a class="flex flex-row items-center" href="/" title="{{ .Config.UI.PageTitle }}">
+            {{ if ne .Config.UI.Header.Logo "" }}
+            <img class="max-h-[100px]" src="{{ .Config.UI.Header.Logo }}" />
+            {{ end }}
+            <h1 class="text-4xl text-black dark:text-white">{{ .Config.UI.PageTitle }}</h1>
+        </a>
+    </div>
+    {{ end }}
+    <div>
+        {{ template "content" . }}
+    </div>
+
+    <div class="mt-6 text-center text-gray-400 dark:text-gray-200">
+        Built with <a class="text-avocado-600 hover:text-avocado-500"
+            href="https://github.com/henrywhitaker3/prompage">PromPage</a> |
+        Checked {{ .Age }} ago
+    </div>
+
+    {{ template "scripts" . }}
+</body>
+
 </html>
