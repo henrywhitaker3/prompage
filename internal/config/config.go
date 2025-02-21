@@ -159,9 +159,6 @@ func setDefaults(conf *Config) {
 	if conf.UI.Theme == "" {
 		conf.UI.Theme = "light"
 	}
-	if conf.UI.Header.Logo == "" {
-		conf.UI.Header.Logo = "https://raw.githubusercontent.com/henrywhitaker3/prompage/refs/heads/main/internal/resources/static/icon.png"
-	}
 }
 
 func setDefaultQueryValues(q *Query) {
