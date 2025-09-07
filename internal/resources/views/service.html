@@ -1,18 +1,18 @@
 {{- define "content" }}
 {{- if not (eq .Graph "") }}
 <div class="flex flex-col justify-between items-center">
-    <div class="w-full flex flex-col md:flex-row justify-center md:items-baseline items-center mb-6">
+    <div class="flex flex-col justify-center items-center mb-6 w-full md:flex-row md:items-baseline">
         <h1 class="text-xl font-bold md:inline-block md:mr-2 text-avocado-800 dark:text-avocado-100" >{{ .Result.Service.Name }}</h1>
-        <span class="text-gray-500 dark:text-gray-300 text-sm">{{ $.Sprintf "%.2f" .Result.Uptime  }}% over the last {{ $.PrettyDuration .Result.Service.Query.Range }}</span>
+        <span class="text-sm text-gray-500 dark:text-gray-300">{{ $.Sprintf "%.2f" .Result.Uptime  }}% over the last {{ $.PrettyDuration .Result.Service.Query.Range }}</span>
     </div>
 
-    <div class="h-64 md:h-96 w-full border dark:border-none dark:bg-zinc-800 rounded-md shadow-md mb-6">{{ .Graph }}</div>
+    <div class="mb-6 w-full h-64 rounded-md border border-gray-200 shadow-md md:h-96 dark:border-none dark:bg-zinc-800">{{ .Graph }}</div>
 
     {{- if .Extras }}
     {{- range $name, $graph := .Extras }}
-    <div class="w-full border dark:border-none dark:bg-zinc-800 rounded-md shadow-md pt-4 mb-6">
+    <div class="pt-4 mb-6 w-full rounded-md border border-gray-200 shadow-md dark:border-none dark:bg-zinc-800">
         <h2 class="text-center text-avocado-800 dark:text-avocado-100">{{ $name }}</h2>
-        <div class="h-64 md:h-96 w-full">{{ $graph }}</div>
+        <div class="w-full h-64 md:h-96">{{ $graph }}</div>
     </div>
     {{- end }}
     {{- end }}

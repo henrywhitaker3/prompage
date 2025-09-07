@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+@source "internal/resources/views/*.html";
+@source inline("bg-lime-600");
+@source inline("dark:bg-lime-800");
+@source inline("bg-red-500");
+@source inline("dark:bg-red-800");
+@source inline("bg-orange-400");
+@source inline("dark:bg-orange-800");
+@source inline("text-white");
+@source inline("dark:text-white");
+@source inline("h-full");
+
+@theme {
+    --color-avocado-100: oklch(0.99 0 0);
+    --color-avocado-200: oklch(0.98 0.04 113.22);
+    --color-avocado-300: oklch(0.94 0.11 115.03);
+    --color-avocado-400: oklch(0.92 0.19 114.08);
+    --color-avocado-500: oklch(0.84 0.18 117.33);
+    --color-avocado-600: oklch(0.53 0.12 118.34);
+}
