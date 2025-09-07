@@ -10,7 +10,7 @@ require (
 	github.com/go-echarts/go-echarts/v2 v2.5.0
 	github.com/hako/durafmt v0.0.0-20210608085754-5c1018a4e16b
 	github.com/henrywhitaker3/flow v1.10.0
-	github.com/labstack/echo-contrib v0.17.2
+	github.com/labstack/echo-contrib v0.17.4
 	github.com/labstack/echo/v4 v4.13.4
 	github.com/prometheus/client_golang v1.23.2
 	github.com/prometheus/common v0.66.1
