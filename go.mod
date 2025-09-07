@@ -2,7 +2,7 @@ module github.com/henrywhitaker3/prompage
 
 go 1.23.0
 
-toolchain go1.23.6
+toolchain go1.25.1
 
 require (
 	github.com/DataDog/datadog-api-client-go/v2 v2.34.0
