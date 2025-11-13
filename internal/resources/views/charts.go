@@ -100,7 +100,7 @@ func GenerateLineChart(series collector.Series, maxPoints int) (string, error) {
 				Smooth:     opts.Bool(true),
 				ShowSymbol: opts.Bool(false),
 			}),
-			charts.WithAreaStyleOpts(opts.AreaStyle{Opacity: 0.2, Color: "#5c6848"}),
+			charts.WithAreaStyleOpts(opts.AreaStyle{Opacity: opts.Float(0.2), Color: "#5c6848"}),
 			charts.WithLineStyleOpts(opts.LineStyle{
 				Color: "#5c6848",
 			}),
