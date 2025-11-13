@@ -1,4 +1,4 @@
-FROM alpine:3.22.1 AS certs
+FROM alpine:3.22.2 AS certs
 
 RUN apk add ca-certificates
 
@@ -21,7 +21,7 @@ COPY --from=tob /build .
 RUN go mod download
 RUN CGO_ENABLED=0 go build -ldflags="-X main.version=${VERSION}" -a -o prompage main.go
 
-FROM alpine:3.22.1
+FROM alpine:3.22.2
 
 COPY --from=certs /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=gob /build/prompage /prompage
