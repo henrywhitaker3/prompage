@@ -7,7 +7,7 @@ jobs:
   unit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-go@v6
         with:
           go-version-file: go.mod
@@ -24,7 +24,7 @@ jobs:
 
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - uses: azure/setup-helm@v4
       - run: helm template prompage chart/ > templated.yaml
       - uses: docker://ghcr.io/yannh/kubeconform:latest
