@@ -25,7 +25,7 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v7
-      - uses: azure/setup-helm@v4
+      - uses: azure/setup-helm@9bc31f4ebc9c6b171d7bfbaa5d006ae7abdb4310 # v5
       - run: helm template prompage chart/ > templated.yaml
       - uses: docker://ghcr.io/yannh/kubeconform:latest
         with:
