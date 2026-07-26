@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Get chart version
         run: |
@@ -23,7 +23,7 @@ jobs:
           echo "CHART_VERSION=${CHART_VERSION}" >> $GITHUB_ENV
 
       - name: Login to ghcr.io
-        uses: docker/login-action@v4
+        uses: docker/login-action@abd2ef45e78c5afb21d64d4ca52ee8550d9572c7 # v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -46,7 +46,7 @@ jobs:
 
       - name: Push chart
         if: steps.chartExists.outputs.CHART_EXISTS == 'no'
-        uses: appany/helm-oci-chart-releaser@v0.5.0
+        uses: appany/helm-oci-chart-releaser@d94988c92bed2e09c6113981f15f8bb495d10943 # v0.5.0
         with:
           name: prompage-helm
           repository: ${{ github.repository_owner }}
