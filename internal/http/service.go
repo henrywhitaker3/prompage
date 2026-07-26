@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"time"
+	"net/url"
 
 	"github.com/henrywhitaker3/flow"
 	"github.com/henrywhitaker3/prompage/internal/app"
@@ -29,7 +30,12 @@ type getServiceData struct {
 
 func NewGetServiceHandler(app *app.App, cache *ResultCache) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		name := c.Param("name")
+		name, err := url.PathUnescape(c.Param("name"))
+		if err != nil {
+            log.Printf("ERROR - could not decode service name: %s\n", c.Param("name"))
+            return c.NoContent(http.StatusBadRequest)
+        }
+
 		svc, age, err := cache.GetService(name)
 		if err != nil {
 			if errors.Is(err, ErrNotFound) {
