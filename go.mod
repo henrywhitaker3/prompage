@@ -5,7 +5,7 @@ go 1.25.0
 toolchain go1.25.4
 
 require (
-	github.com/DataDog/datadog-api-client-go/v2 v2.62.0
+	github.com/DataDog/datadog-api-client-go/v2 v2.63.0
 	github.com/expr-lang/expr v1.17.6
 	github.com/go-echarts/go-echarts/v2 v2.7.2
 	github.com/hako/durafmt v0.0.0-20210608085754-5c1018a4e16b
