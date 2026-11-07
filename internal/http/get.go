@@ -6,7 +6,7 @@ import (
 
 	"github.com/henrywhitaker3/prompage/internal/app"
 	"github.com/henrywhitaker3/prompage/internal/collector"
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v5"
 )
 
 type HttpResult struct {
@@ -21,7 +21,7 @@ type GetAllResponse struct {
 }
 
 func NewGetAllHandler(app *app.App, cache *ResultCache) echo.HandlerFunc {
-	return func(c echo.Context) error {
+	return func(c *echo.Context) error {
 		res, _ := cache.Get()
 
 		out := []HttpResult{}
@@ -34,7 +34,7 @@ func NewGetAllHandler(app *app.App, cache *ResultCache) echo.HandlerFunc {
 }
 
 func NewGetHandler(app *app.App, cache *ResultCache) echo.HandlerFunc {
-	return func(c echo.Context) error {
+	return func(c *echo.Context) error {
 		svc, _, err := cache.GetService(c.Param("name"))
 		if err != nil {
 			if errors.Is(err, ErrNotFound) {

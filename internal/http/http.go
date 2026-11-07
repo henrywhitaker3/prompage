@@ -1,16 +1,15 @@
 package http
 
 import (
-	"context"
 	"fmt"
 	"net/http"
 	"time"
 
 	"github.com/henrywhitaker3/prompage/internal/app"
 	"github.com/henrywhitaker3/prompage/internal/resources/static"
-	"github.com/labstack/echo-contrib/echoprometheus"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+	echoprometheus "github.com/labstack/echo-prometheus"
+	"github.com/labstack/echo/v5"
+	"github.com/labstack/echo/v5/middleware"
 )
 
 type Http struct {
@@ -21,14 +20,13 @@ type Http struct {
 
 func NewHttp(app *app.App, cache *ResultCache) *Http {
 	e := echo.New()
-	e.HideBanner = true
 
 	e.Use(echoprometheus.NewMiddleware("prompage"))
-	e.Use(middleware.TimeoutWithConfig(middleware.TimeoutConfig{
+	e.Use(middleware.ContextTimeoutWithConfig(middleware.ContextTimeoutConfig{
 		Timeout: time.Second * 5,
 	}))
 	if *app.Config.HttpLogs {
-		e.Use(middleware.Logger())
+		e.Use(middleware.RequestLogger())
 	}
 
 	e.GET("/", NewStatusPageHandler(app, cache))
@@ -49,8 +47,4 @@ func NewHttp(app *app.App, cache *ResultCache) *Http {
 
 func (h *Http) Start() error {
 	return h.e.Start(fmt.Sprintf(":%d", h.app.Config.Port))
-}
-
-func (h *Http) Stop(ctx context.Context) error {
-	return h.e.Shutdown(ctx)
 }

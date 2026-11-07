@@ -8,7 +8,7 @@ import (
 	"github.com/henrywhitaker3/prompage/internal/collector"
 	"github.com/henrywhitaker3/prompage/internal/config"
 	"github.com/henrywhitaker3/prompage/internal/resources/views"
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v5"
 )
 
 var (
@@ -35,7 +35,7 @@ type statusData struct {
 }
 
 func NewStatusPageHandler(app *app.App, cache *ResultCache) echo.HandlerFunc {
-	return func(c echo.Context) error {
+	return func(c *echo.Context) error {
 		res, t := cache.Get()
 		age := time.Since(t)
 		op := operational(res)
