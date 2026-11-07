@@ -40,7 +40,7 @@ func NewPrometheus(conf config.Datasource) (*Prometheus, error) {
 }
 
 func (q *Prometheus) Uptime(ctx context.Context, query config.Query) (float32, []Item, error) {
-	val, _, err := q.client.QueryRange(ctx, query.Query, v1.Range{
+	val, _, _, err := q.client.QueryRange(ctx, query.Query, v1.Range{
 		Start: time.Now().Add(-query.Range),
 		End:   time.Now(),
 		Step:  query.Step,
@@ -97,7 +97,7 @@ func (q *Prometheus) Uptime(ctx context.Context, query config.Query) (float32, [
 }
 
 func (q *Prometheus) Status(ctx context.Context, query config.Query) (bool, error) {
-	val, _, err := q.client.Query(ctx, query.Query, time.Now())
+	val, _, _, err := q.client.Query(ctx, query.Query, time.Now())
 	if err != nil {
 		return false, err
 	}

@@ -1,11 +1,10 @@
 package metrics
 
 import (
-	"context"
 	"fmt"
 
-	"github.com/labstack/echo-contrib/echoprometheus"
-	"github.com/labstack/echo/v4"
+	echoprometheus "github.com/labstack/echo-prometheus"
+	"github.com/labstack/echo/v5"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
@@ -29,7 +28,6 @@ type Server struct {
 
 func NewServer(port int) *Server {
 	e := echo.New()
-	e.HideBanner = true
 
 	e.GET("/metrics", echoprometheus.NewHandler())
 
@@ -46,8 +44,4 @@ func (s *Server) Init() {
 
 func (s *Server) Start() error {
 	return s.e.Start(fmt.Sprintf(":%d", s.port))
-}
-
-func (s *Server) Stop(ctx context.Context) error {
-	return s.e.Shutdown(ctx)
 }

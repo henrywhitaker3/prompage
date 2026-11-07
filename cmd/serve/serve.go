@@ -66,9 +66,7 @@ func NewServeCommand(app *app.App) *cobra.Command {
 			}()
 
 			<-ctx.Done()
-			metrics.Stop(context.Background())
-			probes.Stop(context.Background())
-			return http.Stop(context.Background())
+			return nil
 		},
 	}
 }

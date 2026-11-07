@@ -13,7 +13,7 @@ import (
 	"github.com/henrywhitaker3/prompage/internal/collector"
 	"github.com/henrywhitaker3/prompage/internal/config"
 	"github.com/henrywhitaker3/prompage/internal/resources/views"
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v5"
 )
 
 type getServiceData struct {
@@ -28,7 +28,7 @@ type getServiceData struct {
 }
 
 func NewGetServiceHandler(app *app.App, cache *ResultCache) echo.HandlerFunc {
-	return func(c echo.Context) error {
+	return func(c *echo.Context) error {
 		name := c.Param("name")
 		svc, age, err := cache.GetService(name)
 		if err != nil {
@@ -49,9 +49,12 @@ func NewGetServiceHandler(app *app.App, cache *ResultCache) echo.HandlerFunc {
 		extraGraphs := map[string]*flow.Result[string]{}
 
 		for _, extra := range svc.Extras {
-			res := flow.Eventually(c.Request().Context(), func(ctx context.Context) (string, error) {
-				return views.GenerateLineChart(extra, app.Config.UI.Graphs.Points)
-			})
+			res := flow.Eventually(
+				c.Request().Context(),
+				func(ctx context.Context) (string, error) {
+					return views.GenerateLineChart(extra, app.Config.UI.Graphs.Points)
+				},
+			)
 			group.Add(res)
 			extraGraphs[extra.Query.Name] = res
 		}
