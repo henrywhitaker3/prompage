@@ -129,70 +129,31 @@ func getYAxis(series collector.Series) []opts.LineData {
 
 // Condenses the series based on the configured config ui.graphs.points
 func condense(series collector.Series, to int) collector.Series {
-	if len(series.Data) <= to {
+	if to <= 0 || len(series.Data) <= to {
 		return series
 	}
 
-	perBucket := len(series.Data) / to
-	chunks := chunk(series.Data, perBucket, to)
-
 	final := make([]collector.SeriesItem, to)
-	for i := range chunks {
-		final[i] = average(chunks[i])
+	for i := range final {
+		start := i * len(series.Data) / to
+		end := (i + 1) * len(series.Data) / to
+		final[i] = average(series.Data[start:end])
 	}
 	series.Data = final
 
 	return series
 }
 
-func chunk(items []collector.SeriesItem, perBucket, buckets int) [][]collector.SeriesItem {
-	out := make([][]collector.SeriesItem, buckets)
-
-	feed := make(chan collector.SeriesItem, 1)
-	run := true
-	go func() {
-		for _, item := range items {
-			if !run {
-				break
-			}
-			feed <- item
-		}
-	}()
-
-	for i := 0; i < buckets; i++ {
-		for range perBucket {
-			out[i] = append(out[i], <-feed)
-		}
-	}
-
-	// Pull the last item out so it doesn't leak goroutines every graph load
-	run = false
-	// If there is noting to pull out, then this will block, so run it in its
-	// own goroutine with a timeout
-	go func() {
-		select {
-		case <-time.After(time.Second):
-			return
-		case <-feed:
-			return
-		}
-	}()
-
-	return out
-}
-
 func average(items []collector.SeriesItem) collector.SeriesItem {
 	sum := float64(0)
-	start := items[0].Time
 	end := items[len(items)-1].Time
-	mid := start.Add(time.Second * (time.Duration(end.Unix() - start.Unix())))
 
 	for _, item := range items {
 		sum += item.Value
 	}
 
 	return collector.SeriesItem{
-		Time:  mid,
+		Time:  end,
 		Value: sum / float64(len(items)),
 	}
 }
