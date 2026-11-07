@@ -1,11 +1,10 @@
 package health
 
 import (
-	"context"
 	"fmt"
 	"net/http"
 
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v5"
 )
 
 type Health struct {
@@ -20,7 +19,6 @@ type Health struct {
 
 func NewHealth(port int) *Health {
 	e := echo.New()
-	e.HideBanner = true
 	h := &Health{
 		e:       e,
 		healthy: true,
@@ -38,12 +36,8 @@ func (h *Health) Start() error {
 	return h.e.Start(fmt.Sprintf(":%d", h.port))
 }
 
-func (h *Health) Stop(ctx context.Context) error {
-	return h.e.Shutdown(ctx)
-}
-
 func (h *Health) healthHandler() echo.HandlerFunc {
-	return func(c echo.Context) error {
+	return func(c *echo.Context) error {
 		if h.healthy {
 			return c.String(http.StatusOK, "HEALTHY")
 		}
@@ -52,7 +46,7 @@ func (h *Health) healthHandler() echo.HandlerFunc {
 }
 
 func (h *Health) readyHandler() echo.HandlerFunc {
-	return func(c echo.Context) error {
+	return func(c *echo.Context) error {
 		if h.ready {
 			return c.String(http.StatusOK, "READY")
 		}

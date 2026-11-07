@@ -8,9 +8,7 @@ require (
 	github.com/go-echarts/go-echarts/v2 v2.7.2
 	github.com/hako/durafmt v0.0.0-20210608085754-5c1018a4e16b
 	github.com/henrywhitaker3/flow v1.11.1
-	github.com/labstack/echo-contrib v0.50.1
 	github.com/labstack/echo-prometheus v0.0.1
-	github.com/labstack/echo/v4 v4.15.0
 	github.com/labstack/echo/v5 v5.4.4
 	github.com/prometheus/client_golang v1.24.1
 	github.com/prometheus/common v0.70.1
@@ -27,21 +25,14 @@ require (
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/labstack/gommon v0.5.0 // indirect
-	github.com/mattn/go-colorable v0.1.15 // indirect
-	github.com/mattn/go-isatty v0.0.22 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/prometheus/client_model v0.6.2 // indirect
 	github.com/prometheus/procfs v0.21.1 // indirect
-	github.com/valyala/bytebufferpool v1.0.0 // indirect
-	github.com/valyala/fasttemplate v1.2.2 // indirect
-	golang.org/x/crypto v0.57.0 // indirect
 	golang.org/x/net v0.60.0 // indirect
 	golang.org/x/oauth2 v0.36.0 // indirect
 	golang.org/x/sys v0.48.0 // indirect
-	golang.org/x/text v0.42.0 // indirect
 	golang.org/x/time v0.15.0 // indirect
 	google.golang.org/protobuf v1.36.11 // indirect
 )
