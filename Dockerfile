@@ -10,7 +10,7 @@ COPY . /build
 RUN npm ci
 RUN npm run build
 
-FROM golang:1.27.3 AS gob
+FROM golang:1.27.4 AS gob
 
 ARG VERSION
 
